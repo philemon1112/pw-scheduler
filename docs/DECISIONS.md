@@ -53,3 +53,16 @@ Vitest 5 needs Node 22 (`Map.groupBy`); this machine runs Node 20.20. Vitest 3 c
 
 ## D15 — Next.js 16.4.6, latest
 Confirmed by Lemon. Auth.js v5 beta works with it.
+
+## D16 — Old sheets: a column that doesn't fit the weeks is dated by n-th weekday
+The seed's July 2026 has a Week 1 Tuesday. Under Mon–Sun weeks that is 30 June, and shifting just that row to 7 July lands it on Week 2's Tuesday — the database's one-session-per-slot-per-day rule caught it. A hand-filled sheet's four Tuesday rows can only mean that month's four Tuesdays (7, 14, 21, 28), so when any row of a slot's column falls outside the month, **that whole column** is dated by n-th weekday. This is for importing history only; generated months use the week rule and drop dates outside the month (D14). The seed reports it as a note.
+
+## D17 — Seed only adds people, never overwrites them
+Re-running `pnpm db:seed` updates locations and slots from the file, adds members and couples that aren't there, and replaces previously imported months. It never changes a member that already exists, so a confirmed title, a phone number or a privilege set in the app survives. A month with anything made in the app (a generated or manual assignment) is skipped and reported.
+
+## D18 — A couple that changes keeps its past sessions
+Re-pairing someone deletes the old couple row, but first clears the couple link on its past assignments rather than deleting them: the sessions stay in the history as an ordinary pair.
+
+## D19 — Local Postgres without Docker
+`pnpm db:local` (PGlite over the Postgres protocol) gives a database for trying the app before Neon is set up and for offline work. The DB client uses node-postgres for `localhost` URLs and Neon's drivers otherwise. Tests use PGlite in memory with every migration applied, so constraints, the pair-history view and transactions are tested for real.
+

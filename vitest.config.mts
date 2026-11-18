@@ -5,6 +5,9 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
     environment: "node",
+    // The database tests boot an in-memory Postgres and replay every
+    // migration; several at once on a laptop can pass five seconds.
+    testTimeout: 30_000,
     include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
     // `server-only` throws outside a React Server Component bundle; tests run
     // the pure logic directly.

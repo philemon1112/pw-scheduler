@@ -1,21 +1,36 @@
 import type { Metadata } from "next";
-import { MapPin } from "lucide-react";
 
-import { EmptyState } from "@/components/empty-state";
-import { PageHeader } from "@/components/page-header";
+import { LocationsView } from "@/components/locations/locations-view";
+import { listLocations } from "@/db/queries/locations";
+import { hasRole } from "@/lib/auth/roles";
+import { requireUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Locations & slots" };
 
-export default function Page() {
+export default async function LocationsPage() {
+  const user = await requireUser();
+  const places = await listLocations();
   return (
-    <>
-      <PageHeader title="Locations & slots" description="Where and when witnessing happens, and the special days that change it." />
-      <EmptyState
-        icon={MapPin}
-        title="No locations yet"
-        hint="The seed in milestone 2 adds Police Station – Westlands and Haatso – near MTN office with their slots."
-        className="rise bg-card"
-      />
-    </>
+    <LocationsView
+      locations={places.map((place) => ({
+        id: place.id,
+        key: place.key,
+        name: place.name,
+        messageName: place.messageName,
+        pdfTitle: place.pdfTitle,
+        pdfColor: place.pdfColor,
+        active: place.active,
+        slots: place.slots.map((slot) => ({
+          id: slot.id,
+          weekday: slot.weekday,
+          startTime: slot.startTime.slice(0, 5),
+          endTime: slot.endTime.slice(0, 5),
+          pdfDayLabel: slot.pdfDayLabel,
+          pdfTimeLabel: slot.pdfTimeLabel,
+          active: slot.active,
+        })),
+      }))}
+      canEdit={hasRole(user, "editor")}
+    />
   );
 }

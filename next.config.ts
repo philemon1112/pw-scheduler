@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   // signed-in admin app, and nothing here benefits from a static shell.
   cacheComponents: false,
   poweredByHeader: false,
+  serverExternalPackages: ["pg"],
   turbopack: {
     rules: {
       "*.css": {

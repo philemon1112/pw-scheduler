@@ -41,6 +41,29 @@ pnpm dev
 
 Open http://localhost:3000 and sign in with `OWNER_EMAIL` and `OWNER_INITIAL_PASSWORD`. That first sign-in creates the owner account. After that the two env values do nothing, so changing your password in the app is final.
 
+## Trying it without Neon (optional)
+
+`pnpm db:local` runs a real Postgres from the project itself (PGlite, Postgres compiled to WebAssembly), with nothing to install. It keeps its data in `.local-db/`, applies the migrations on start, and listens on port 54329.
+
+```bash
+pnpm db:local                       # terminal 1 — leave it running
+```
+
+In `.env.local`, point the app at it instead of Neon:
+
+```
+DATABASE_URL="postgres://postgres@localhost:54329/postgres"
+```
+
+Then in a second terminal:
+
+```bash
+pnpm db:seed
+pnpm dev
+```
+
+The app talks to a `localhost` URL with node-postgres; anything else goes through Neon's drivers. Delete `.local-db/` to start again from empty. Neon is still what runs in production.
+
 ## 5. Production on Vercel
 
 1. Import the repository into Vercel.
