@@ -1,0 +1,1532 @@
+{
+ "_notes": [
+  "Extracted from the July, September and November 2026 PDFs. 'Week n' is kept as written; resolve real dates with the app's week rule.",
+  "Names normalised: trailing full stops removed, 'Henry Atsu Dameh' merged into 'Henry Atsu Damey', July's 'Jerry Bobby Jerome Masamaka' split into two people.",
+  "Titles (Bro/Sis) are guesses from first names; titleConfirmed=false until Lemon confirms them in the app.",
+  "Couples are fixed pairs by default, but a couple member can still be paired with someone else (e.g. July: Comfort Owusua & Ruth Agbanawo).",
+  "Kwabena Adusei Snr & Davida Adusei are often paired; whether they are a couple is unconfirmed."
+ ],
+ "congregation": "Westlands English Congregation",
+ "timezone": "Africa/Accra",
+ "locations": [
+  {
+   "key": "police",
+   "name": "Police Station – Westlands",
+   "messageName": "Police Station – Westlands",
+   "pdfTitle": "POLICE STATION - (Tuesday, Friday, Saturday & Sunday)",
+   "pdfColor": "#B4E0A3",
+   "slots": [
+    {
+     "key": "police-tue-1600",
+     "weekday": "TUE",
+     "start": "16:00",
+     "end": "18:00",
+     "pdfDay": "Tuesday",
+     "pdfTime": "4:00 – 6:00pm"
+    },
+    {
+     "key": "police-fri-0600",
+     "weekday": "FRI",
+     "start": "06:00",
+     "end": "08:00",
+     "pdfDay": "FRIDAY",
+     "pdfTime": "6:00 – 8:00 AM"
+    },
+    {
+     "key": "police-fri-0800",
+     "weekday": "FRI",
+     "start": "08:00",
+     "end": "10:00",
+     "pdfDay": "FRIDAY",
+     "pdfTime": "8:00 – 10:00 AM"
+    },
+    {
+     "key": "police-fri-1600",
+     "weekday": "FRI",
+     "start": "16:00",
+     "end": "18:00",
+     "pdfDay": "FRIDAY",
+     "pdfTime": "4:00 – 6:00 pm"
+    },
+    {
+     "key": "police-sat-0630",
+     "weekday": "SAT",
+     "start": "06:30",
+     "end": "08:30",
+     "pdfDay": "SATURDAY",
+     "pdfTime": "6:30 – 8:30 AM"
+    },
+    {
+     "key": "police-sat-0930",
+     "weekday": "SAT",
+     "start": "09:30",
+     "end": "11:30",
+     "pdfDay": "SATURDAY",
+     "pdfTime": "9:30 – 11:30AM"
+    },
+    {
+     "key": "police-sun-1600",
+     "weekday": "SUN",
+     "start": "16:00",
+     "end": "18:00",
+     "pdfDay": "SUNDAY",
+     "pdfTime": "4:00 – 6:00 PM"
+    }
+   ]
+  },
+  {
+   "key": "mtn",
+   "name": "Haatso – near MTN office",
+   "messageName": "Haatso - near MTN office",
+   "pdfTitle": "NEAR MTN OFFICE — (Friday, Saturday & Sunday)",
+   "pdfColor": "#C9E9F8",
+   "slots": [
+    {
+     "key": "mtn-fri-0600",
+     "weekday": "FRI",
+     "start": "06:00",
+     "end": "08:00",
+     "pdfDay": "FRIDAY",
+     "pdfTime": "6:00 – 8:00 AM"
+    },
+    {
+     "key": "mtn-sat-0600",
+     "weekday": "SAT",
+     "start": "06:00",
+     "end": "08:00",
+     "pdfDay": "SATURDAY",
+     "pdfTime": "6:00 – 8:00 AM"
+    },
+    {
+     "key": "mtn-sat-0930",
+     "weekday": "SAT",
+     "start": "09:30",
+     "end": "11:30",
+     "pdfDay": "SATURDAY",
+     "pdfTime": "9:30 – 11:30 AM"
+    },
+    {
+     "key": "mtn-sun-0630",
+     "weekday": "SUN",
+     "start": "06:30",
+     "end": "08:30",
+     "pdfDay": "SUNDAY",
+     "pdfTime": "6:30 – 8:30 AM"
+    },
+    {
+     "key": "mtn-sun-0930",
+     "weekday": "SUN",
+     "start": "09:30",
+     "end": "11:30",
+     "pdfDay": "SUNDAY",
+     "pdfTime": "9:30 – 11:30 AM"
+    }
+   ]
+  }
+ ],
+ "couples": [
+  [
+   "David Gidi",
+   "Henrietta Gidi"
+  ],
+  [
+   "Yaw Djansi-Duose",
+   "Angela Djansi-Duose"
+  ],
+  [
+   "Love Agbanawo",
+   "Ruth Agbanawo"
+  ],
+  [
+   "Benjamin Coffie-Blewusi",
+   "Valerie Coffie-Blewusi"
+  ],
+  [
+   "Godfrey Hammond",
+   "Anita Hammond"
+  ],
+  [
+   "Asiedu Gyimah",
+   "Elizabeth Gyimah"
+  ]
+ ],
+ "members": [
+  {
+   "name": "Abigail Boakye",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Angela Djansi-Duose",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Anita Hammond",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Arnold Boateng",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Asantewaa Bittermann",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Asiedu Gyimah",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Beauty Odjo",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Benjamin Coffie-Blewusi",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Bernice Sakyi",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Comfort Owusua",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "David Gidi",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Davida Adusei",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Doris Adams",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Elizabeth Gyimah",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Elvis Ampomah-Tabi",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Emmanuel Asante",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Eunice Asante",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "George Dautey",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Godfrey Hammond",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Hagar Nyarkoa",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Henrietta Gidi",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Henry Atsu Damey",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Isaac Kwame Kwakye",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Janet Kwakye",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Jerome Masamaka",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Jerry Bobby",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Julia Eshun",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Kofi Adusei",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Kwabena Adusei Snr",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Lily Owusu Mensah",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Love Agbanawo",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Lydia Mensah",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Margaret Afriyie",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Margaret Banahene",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Philemon Abakah",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Philip Abakah",
+   "title": "Bro",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Ruth Agbanawo",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Sarah Atokey",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Sylvia Asamoah",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Valerie Coffie-Blewusi",
+   "title": "Sis",
+   "titleConfirmed": false
+  },
+  {
+   "name": "Yaw Djansi-Duose",
+   "title": "Bro",
+   "titleConfirmed": false
+  }
+ ],
+ "schedules": [
+  {
+   "month": "2026-07",
+   "source": "Public_Withnessing_Schedule_-_JULY_2026.pdf",
+   "assignments": [
+    {
+     "week": 1,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Julia Eshun"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0800",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Angela Djansi-Duose"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-1600",
+     "members": [
+      "Isaac Kwame Kwakye",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0630",
+     "members": [
+      "Julia Eshun",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0930",
+     "members": [
+      "Eunice Asante",
+      "Janet Kwakye"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sun-1600",
+     "members": [
+      "Jerry Bobby",
+      "Jerome Masamaka"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0600",
+     "members": [
+      "Comfort Owusua",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0800",
+     "members": [
+      "Beauty Odjo",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0630",
+     "members": [
+      "Emmanuel Asante",
+      "George Dautey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0930",
+     "members": [
+      "Janet Kwakye",
+      "Margaret Banahene"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sun-1600",
+     "members": [
+      "Love Agbanawo",
+      "Ruth Agbanawo"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0600",
+     "members": [
+      "Lydia Mensah",
+      "Sylvia Asamoah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0800",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-1600",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0630",
+     "members": [
+      "Beauty Odjo",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0930",
+     "members": [
+      "David Gidi",
+      "Henrietta Gidi"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sun-1600",
+     "members": [
+      "Jerry Bobby",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0600",
+     "members": [
+      "Eunice Asante",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0800",
+     "members": [
+      "Margaret Afriyie",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-1600",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0630",
+     "members": [
+      "Doris Adams",
+      "Sylvia Asamoah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0930",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Angela Djansi-Duose"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sun-1600",
+     "members": [
+      "Benjamin Coffie-Blewusi",
+      "Valerie Coffie-Blewusi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Comfort Owusua",
+      "Ruth Agbanawo"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Arnold Boateng",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Comfort Owusua",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Asiedu Gyimah",
+      "Elizabeth Gyimah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Arnold Boateng",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Hagar Nyarkoa",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Arnold Boateng",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Elizabeth Gyimah",
+      "Asiedu Gyimah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Henry Atsu Damey",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Kofi Adusei",
+      "Emmanuel Asante"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Eunice Asante",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Godfrey Hammond",
+      "Anita Hammond"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Elvis Ampomah-Tabi",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Sarah Atokey",
+      "Comfort Owusua"
+     ]
+    }
+   ]
+  },
+  {
+   "month": "2026-09",
+   "source": "Public_Withnessing_Schedule_-_SEPTEMBER_2026.pdf",
+   "assignments": [
+    {
+     "week": 1,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Julia Eshun"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0800",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Angela Djansi-Duose"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-1600",
+     "members": [
+      "Isaac Kwame Kwakye",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0630",
+     "members": [
+      "Julia Eshun",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0930",
+     "members": [
+      "Eunice Asante",
+      "Janet Kwakye"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sun-1600",
+     "members": [
+      "Jerry Bobby",
+      "Jerome Masamaka"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0600",
+     "members": [
+      "Comfort Owusua",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0800",
+     "members": [
+      "Beauty Odjo",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0630",
+     "members": [
+      "Emmanuel Asante",
+      "George Dautey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0930",
+     "members": [
+      "Janet Kwakye",
+      "Margaret Banahene"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sun-1600",
+     "members": [
+      "Love Agbanawo",
+      "Ruth Agbanawo"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0600",
+     "members": [
+      "Lydia Mensah",
+      "Sylvia Asamoah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0800",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-1600",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0630",
+     "members": [
+      "Beauty Odjo",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0930",
+     "members": [
+      "David Gidi",
+      "Henrietta Gidi"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sun-1600",
+     "members": [
+      "Jerry Bobby",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0600",
+     "members": [
+      "Eunice Asante",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0800",
+     "members": [
+      "Margaret Afriyie",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-1600",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0630",
+     "members": [
+      "Doris Adams",
+      "Sylvia Asamoah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0930",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Angela Djansi-Duose"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sun-1600",
+     "members": [
+      "Benjamin Coffie-Blewusi",
+      "Valerie Coffie-Blewusi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Comfort Owusua",
+      "Ruth Agbanawo"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Arnold Boateng",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Comfort Owusua",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Henry Atsu Damey",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Arnold Boateng",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Hagar Nyarkoa",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Arnold Boateng",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Elizabeth Gyimah",
+      "Asiedu Gyimah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Henry Atsu Damey",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Kofi Adusei",
+      "Emmanuel Asante"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Eunice Asante",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Godfrey Hammond",
+      "Anita Hammond"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Elvis Ampomah-Tabi",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Sarah Atokey",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Kofi Adusei"
+     ]
+    }
+   ]
+  },
+  {
+   "month": "2026-11",
+   "source": "Public_Withnessing_Schedule_-_NOVEMBER_2026.pdf",
+   "assignments": [
+    {
+     "week": 1,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Julia Eshun"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0600",
+     "members": [
+      "Davida Adusei",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-0800",
+     "members": [
+      "Margaret Afriyie",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-fri-1600",
+     "members": [
+      "Isaac Kwame Kwakye",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0630",
+     "members": [
+      "Julia Eshun",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sat-0930",
+     "members": [
+      "David Gidi",
+      "Henrietta Gidi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "police-sun-1600",
+     "members": [
+      "Emmanuel Asante",
+      "Jerome Masamaka"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0600",
+     "members": [
+      "Comfort Owusua",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-0800",
+     "members": [
+      "Beauty Odjo",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-fri-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0630",
+     "members": [
+      "Jerry Bobby",
+      "George Dautey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sat-0930",
+     "members": [
+      "Yaw Djansi-Duose",
+      "Angela Djansi-Duose"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "police-sun-1600",
+     "members": [
+      "Love Agbanawo",
+      "Ruth Agbanawo"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-tue-1600",
+     "members": [
+      "Asantewaa Bittermann",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0600",
+     "members": [
+      "Lydia Mensah",
+      "Margaret Afriyie"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-0800",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-fri-1600",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0630",
+     "members": [
+      "Margaret Banahene",
+      "Lily Owusu Mensah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sat-0930",
+     "members": [
+      "Eunice Asante",
+      "Janet Kwakye"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "police-sun-1600",
+     "members": [
+      "Jerry Bobby",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-tue-1600",
+     "members": [
+      "Abigail Boakye",
+      "Bernice Sakyi"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0600",
+     "members": [
+      "Davida Adusei",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-0800",
+     "members": [
+      "Margaret Afriyie",
+      "Lydia Mensah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-fri-1600",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Davida Adusei"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0630",
+     "members": [
+      "Benjamin Coffie-Blewusi",
+      "Valerie Coffie-Blewusi"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sat-0930",
+     "members": [
+      "Janet Kwakye",
+      "Beauty Odjo"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "police-sun-1600",
+     "members": [
+      "Margaret Banahene",
+      "Hagar Nyarkoa"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Arnold Boateng",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Comfort Owusua",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Henry Atsu Damey",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 1,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Arnold Boateng",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Philemon Abakah",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Julia Eshun",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Arnold Boateng",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Philip Abakah",
+      "Kofi Adusei"
+     ]
+    },
+    {
+     "week": 2,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Elvis Ampomah-Tabi"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Henry Atsu Damey",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Kofi Adusei",
+      "Emmanuel Asante"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Julia Eshun",
+      "Doris Adams"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Eunice Asante",
+      "Sarah Atokey"
+     ]
+    },
+    {
+     "week": 3,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Godfrey Hammond",
+      "Anita Hammond"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-fri-0600",
+     "members": [
+      "Henry Atsu Damey",
+      "Philemon Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0600",
+     "members": [
+      "Elvis Ampomah-Tabi",
+      "Henry Atsu Damey"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sat-0930",
+     "members": [
+      "Jerome Masamaka",
+      "Philip Abakah"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0630",
+     "members": [
+      "Sarah Atokey",
+      "Comfort Owusua"
+     ]
+    },
+    {
+     "week": 4,
+     "slot": "mtn-sun-0930",
+     "members": [
+      "Kwabena Adusei Snr",
+      "Kofi Adusei"
+     ]
+    }
+   ]
+  }
+ ]
+}

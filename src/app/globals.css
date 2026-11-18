@@ -1,0 +1,385 @@
+@import "tailwindcss";
+
+/* ============================================
+   Radix state variants.
+
+   The primitives are written against short `data-open:` / `data-active:`
+   variants. Tailwind's own shorthand only tests that an attribute is present,
+   and React stringifies `data-*` props, so `data-active={false}` still renders
+   `data-active="false"` — these test for the value.
+   ============================================ */
+@custom-variant data-open (&[data-state="open"], &[data-open="true"]);
+@custom-variant data-closed (&[data-state="closed"], &[data-closed="true"]);
+@custom-variant data-active (&[data-state="active"], &[data-active="true"]);
+@custom-variant data-checked (&[data-state="checked"]);
+@custom-variant data-unchecked (&[data-state="unchecked"]);
+@custom-variant data-disabled (&[data-state="disabled"], &[data-disabled="true"]);
+@custom-variant data-horizontal (&[data-orientation="horizontal"]);
+@custom-variant data-vertical (&[data-orientation="vertical"]);
+@custom-variant data-placeholder (&[data-placeholder]);
+
+/* ============================================
+   PW Scheduler theme.
+
+   The system is Budgeteer's: three surface tiers a hair apart, cards defined
+   by a hairline border rather than a shadow, two steps of elevation, glass
+   only on things that float, and one dark "inverted" surface. The colours are
+   the congregation app's own — a quiet green on a warm off-white.
+
+   Colour is spent in three places: the accent green on whatever the eye
+   should land on first, the two location accents (Police green, MTN blue) so
+   a glance says which table you are in, and amber/red for things that need
+   attention. Everything else is white, hairline or type.
+   ============================================ */
+
+:root {
+  --radius: 0.75rem;
+
+  /* Surfaces: page → shell → card. */
+  --page: #f4f5f2;
+  --background: #f8f9f6;
+  --foreground: #17201b;
+  --card: #ffffff;
+  --card-foreground: #17201b;
+  --popover: #ffffff;
+  --popover-foreground: #17201b;
+
+  /* Glass, in two tiers by job (see Budgeteer): chrome may be translucent
+     because it carries a word at most; a panel carries text over a dense
+     table, so its fill stays high. */
+  --glass-chrome: oklch(1 0 0 / 62%);
+  --glass-chrome-border: oklch(1 0 0 / 88%);
+  --glass-panel: oklch(1 0 0 / 86%);
+  --glass-panel-border: color-mix(in oklab, #dde1dc 70%, transparent);
+  --glass-blur: 20px;
+  --glass-edge: oklch(1 0 0 / 85%);
+  --glass-glow: oklch(1 0 0 / 55%);
+
+  /* The hairline that does the structural work. */
+  --border: #dde1dc;
+  --border-strong: #c9cfc8;
+  --input: #dde1dc;
+
+  /* Accent green. One hue, used sparingly. */
+  --primary: #1f6f4a;
+  --primary-hover: #195c3d;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e6f1eb;
+
+  --secondary: #eef0ec;
+  --secondary-foreground: #17201b;
+  --muted: #f0f2ee;
+  --muted-foreground: #5b6460;
+  --accent: #e6f1eb;
+  --accent-foreground: #17553a;
+
+  /* Skeletons get their own pair, pitched far enough from both the page and
+     a card to be seen — a placeholder's only job. */
+  --skeleton: #e4e7e2;
+  --skeleton-sheen: #f7f8f5;
+
+  /* The two locations. Used for a table's title bar, a cell's left edge and
+     the dot beside a location name — never as the only signal. */
+  --police: #2e8b5f;
+  --police-soft: #e5f3eb;
+  --mtn: #2f6fc0;
+  --mtn-soft: #e6eff9;
+
+  /* Attention. Each a background/text pair that clears WCAG AA. */
+  --warning: #fff6e5;
+  --warning-foreground: #7a4200;
+  --warning-border: #f2d9a8;
+  --danger: #fdecea;
+  --danger-foreground: #8e2318;
+  --danger-border: #f3c2bc;
+  --destructive: #b3261e;
+  --positive: #1f6f4a;
+
+  /* The inverted surface: the sidebar, and the one filled primary action. */
+  --inverted: #17201b;
+  --inverted-hover: #222e27;
+  --inverted-foreground: #f4f5f2;
+  --inverted-muted: #9aa49f;
+  --inverted-border: oklch(1 0 0 / 10%);
+
+  --ring: #1f6f4a;
+
+  --shadow-card: 0 1px 2px rgb(23 32 27 / 0.04);
+  --shadow-lift: 0 6px 20px -6px rgb(23 32 27 / 0.14), 0 2px 6px -2px rgb(23 32 27 / 0.06);
+  --shadow-pop: 0 12px 32px -8px rgb(23 32 27 / 0.2);
+}
+
+@theme inline {
+  /* Loaded from npm in `layout.tsx`. */
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-page: var(--page);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-glass-chrome: var(--glass-chrome);
+  --color-glass-panel: var(--glass-panel);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-police: var(--police);
+  --color-police-soft: var(--police-soft);
+  --color-mtn: var(--mtn);
+  --color-mtn-soft: var(--mtn-soft);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-border: var(--warning-border);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-border: var(--danger-border);
+  --color-destructive: var(--destructive);
+  --color-positive: var(--positive);
+  --color-inverted: var(--inverted);
+  --color-inverted-hover: var(--inverted-hover);
+  --color-inverted-foreground: var(--inverted-foreground);
+  --color-inverted-muted: var(--inverted-muted);
+  --color-inverted-border: var(--inverted-border);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-pop: var(--shadow-pop);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+
+  /* Three curves, and only three. `ease-in` is deliberately absent: it
+     starts slow, which delays the moment the user is watching. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-page text-foreground antialiased;
+    font-family: var(--font-sans);
+    overscroll-behavior-y: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* Every button, tab and menu row is web-style navigation; an arrow over a
+     clickable control reads as "not clickable". Disabled ones keep it. */
+  :where(
+    button,
+    [role="button"],
+    [role="tab"],
+    [role="menuitem"],
+    [role="option"],
+    [role="switch"],
+    [role="checkbox"],
+    summary,
+    select,
+    label[for],
+    input[type="checkbox"],
+    input[type="radio"]
+  ):not(:disabled, [aria-disabled="true"], [data-disabled]) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 20%, transparent);
+    color: var(--foreground);
+  }
+}
+
+@layer utilities {
+  /* ── Glass ──────────────────────────────────────────────────────────────
+     For the handful of things that genuinely float — never for cards in a
+     list: `backdrop-filter` costs a compositing layer each. */
+  .glass-chrome {
+    background-color: var(--glass-chrome);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.8);
+    border: 1px solid var(--glass-chrome-border);
+    --tw-inset-shadow: inset 2px 2px 0 -2px var(--glass-edge), inset 0 0 3px 1px var(--glass-glow);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow, 0 0 #0000), var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow, 0 0 #0000);
+  }
+
+  .glass-panel {
+    background-color: var(--glass-panel);
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 2)) saturate(1.35);
+    backdrop-filter: blur(calc(var(--glass-blur) * 2)) saturate(1.35);
+    border: 1px solid var(--glass-panel-border);
+  }
+
+  .glass-sheet {
+    background-color: oklch(1 0 0 / 88%);
+    background-image: linear-gradient(160deg, oklch(1 0 0 / 45%), transparent 45%);
+    -webkit-backdrop-filter: blur(40px) saturate(1.6);
+    backdrop-filter: blur(40px) saturate(1.6);
+  }
+
+  .glass-bar {
+    background-color: color-mix(in oklab, var(--background) 70%, transparent);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    backdrop-filter: blur(24px) saturate(1.8);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass-chrome, .glass-panel, .glass-sheet { background-color: var(--card); }
+    .glass-bar { background-color: var(--background); }
+  }
+
+  /* ── Overlays ───────────────────────────────────────────────────────────
+     Menus scale from 96% out of the control that opened them; dialogs scale
+     in place (`scale` composes with the centring transform, `transform`
+     would replace it); sheets slide up on a phone and in from the right
+     where there is room. */
+  @keyframes overlay-in { from { opacity: 0; scale: 0.96; } }
+  @keyframes overlay-out { to { opacity: 0; scale: 0.96; } }
+  @keyframes backdrop-in { from { opacity: 0; } }
+  @keyframes backdrop-out { to { opacity: 0; } }
+
+  .overlay-motion[data-state="open"] { animation: overlay-in 170ms var(--ease-out); }
+  .overlay-motion[data-state="closed"] { animation: overlay-out 120ms var(--ease-out) forwards; }
+  .backdrop-motion[data-state="open"] { animation: backdrop-in 200ms var(--ease-out); }
+  .backdrop-motion[data-state="closed"] { animation: backdrop-out 150ms var(--ease-out) forwards; }
+
+  @keyframes dialog-in { from { opacity: 0; scale: 0.96; } }
+  @keyframes dialog-out { to { opacity: 0; scale: 0.96; } }
+  .dialog-motion[data-state="open"] { animation: dialog-in 190ms var(--ease-out); }
+  .dialog-motion[data-state="closed"] { animation: dialog-out 140ms var(--ease-out) forwards; }
+
+  @keyframes panel-in-right { from { transform: translateX(100%); } }
+  @keyframes panel-out-right { to { transform: translateX(100%); } }
+  @keyframes panel-in-bottom { from { transform: translateY(100%); } }
+  @keyframes panel-out-bottom { to { transform: translateY(100%); } }
+
+  .panel-right[data-state="open"] { animation: panel-in-right 300ms var(--ease-drawer); }
+  .panel-right[data-state="closed"] { animation: panel-out-right 240ms var(--ease-drawer) forwards; }
+  .panel-bottom[data-state="open"] { animation: panel-in-bottom 300ms var(--ease-drawer); }
+  .panel-bottom[data-state="closed"] { animation: panel-out-bottom 240ms var(--ease-drawer) forwards; }
+
+  .panel-adaptive[data-state="open"] { animation: panel-in-bottom 300ms var(--ease-drawer); }
+  .panel-adaptive[data-state="closed"] { animation: panel-out-bottom 240ms var(--ease-drawer) forwards; }
+  @media (min-width: 40rem) {
+    .panel-adaptive[data-state="open"] { animation: panel-in-right 300ms var(--ease-drawer); }
+    .panel-adaptive[data-state="closed"] { animation: panel-out-right 240ms var(--ease-drawer) forwards; }
+  }
+
+  /* ── Type ──────────────────────────────────────────────────────────── */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+  .font-display { font-family: var(--font-display); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* ── Micro-interactions ─────────────────────────────────────────────────
+     A hovered surface lifts by two pixels and its hairline firms up; nothing
+     scales or changes colour. Only where hover is real — on a phone a tap
+     would otherwise leave cells stuck "lifted". */
+  .lift {
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out),
+      border-color 220ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .lift:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lift);
+      border-color: var(--border-strong);
+    }
+  }
+
+  .row-hover { transition: background-color 160ms var(--ease-out); }
+  @media (hover: hover) {
+    .row-hover:hover { background-color: var(--muted); }
+  }
+
+  /* Cards fade up on mount, staggered by position via `animation-delay`, so a
+     page assembles itself rather than appearing all at once. */
+  .rise { animation: rise 460ms var(--ease-out) both; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* A loading surface sweeps, it doesn't pulse: a sweep reads as "on its way",
+     a pulse as "something is wrong". */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--skeleton);
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg, transparent 0%, var(--skeleton-sheen) 50%, transparent 100%);
+    animation: shimmer-sweep 1.6s ease-in-out infinite;
+  }
+  @keyframes shimmer-sweep { 100% { transform: translateX(100%); } }
+
+  /* Load bars grow from the left; schedule cells pop in after Generate. */
+  .bar-grow {
+    transform-origin: left center;
+    animation: bar-grow 700ms var(--ease-out) both;
+  }
+  @keyframes bar-grow { from { transform: scaleX(0); } }
+
+  .cell-in { animation: cell-in 320ms var(--ease-out) both; }
+  @keyframes cell-in { from { opacity: 0; transform: scale(0.92); } }
+
+  /* A cell that just changed — a swap, a lock — glows once in the accent. */
+  .flash { animation: flash 900ms var(--ease-out); }
+  @keyframes flash {
+    from { box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 35%, transparent); }
+    to { box-shadow: 0 0 0 3px transparent; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-motion[data-state],
+  .backdrop-motion[data-state],
+  .dialog-motion[data-state],
+  .panel-adaptive[data-state],
+  .panel-right[data-state],
+  .panel-bottom[data-state],
+  .shimmer::after,
+  .bar-grow,
+  .cell-in,
+  .rise,
+  .flash {
+    animation: none;
+  }
+  .lift { transition: none; }
+}
