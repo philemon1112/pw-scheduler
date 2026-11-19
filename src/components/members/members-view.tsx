@@ -44,6 +44,7 @@ export function MembersView({
   month,
   canEdit,
   isOwner,
+  initialQuery = "",
 }: {
   members: MemberRow[];
   locations: LocationOption[];
@@ -51,11 +52,15 @@ export function MembersView({
   month: string;
   canEdit: boolean;
   isOwner: boolean;
+  /** From `?q=`, e.g. "Add number" in Messages: an exact name opens that person straight away. */
+  initialQuery?: string;
 }) {
   const router = useRouter();
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(initialQuery);
   const [filter, setFilter] = React.useState<Filter>("all");
-  const [editing, setEditing] = React.useState<MemberRow | "new" | null>(null);
+  const [editing, setEditing] = React.useState<MemberRow | "new" | null>(
+    () => (initialQuery && members.find((m) => m.displayName.toLowerCase() === initialQuery.toLowerCase())) || null
+  );
   const [limitsOpen, setLimitsOpen] = React.useState(false);
   const [confirming, setConfirming] = React.useState(false);
 

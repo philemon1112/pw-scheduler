@@ -38,6 +38,7 @@ const edit = (member: typeof members.$inferSelect, patch: Partial<MemberInput> =
   notes: "",
   active: true,
   pausedUntil: null,
+  alwaysTogether: false,
   partnerId: null,
   neverIds: [],
   unavailable: [],

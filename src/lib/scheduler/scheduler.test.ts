@@ -200,8 +200,11 @@ describe("determinism and speed", () => {
   });
 
   it("builds about 50 sessions for 50 people in under 2 seconds", () => {
+    // CPU time, not wall time, so a busy machine running other test files doesn't fail it.
+    const cpu = process.cpuUsage();
     const result = generate(bigMonth(50, 50, 3));
-    expect(result.ms).toBeLessThan(2000);
+    const used = process.cpuUsage(cpu);
+    expect((used.user + used.system) / 1000).toBeLessThan(2000);
     expect(result.iterations).toBe(300);
     expect(hardBreaks(bigMonth(50, 50, 3), result.placements)).toEqual([]);
   });

@@ -26,6 +26,8 @@ export const MemberInput = z
     active: z.boolean(),
     pausedUntil: Day.nullable(),
     partnerId: Uuid.nullable(),
+    /** For a couple: only ever place them together. */
+    alwaysTogether: z.boolean().default(false),
     neverIds: z.array(Uuid).max(60),
     unavailable: z
       .array(z.object({ start: Day, end: Day, reason: z.string().trim().max(120) }))

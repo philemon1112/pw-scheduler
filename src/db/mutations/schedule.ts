@@ -1,11 +1,11 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, notInArray, sql } from "drizzle-orm";
 
 import { generate } from "@/lib/scheduler/generate";
 import type { Evaluation } from "@/lib/scheduler/types";
 
 import { audit } from "../audit";
 import { loadMonthInput, readSettings, resolveFromSlots } from "../scheduler-input";
-import { assignments, couples, members, schedules, sessions } from "../schema";
+import { assignments, couples, members, schedules, sessions, swapRequests } from "../schema";
 import type { AnyDb } from "../types";
 
 /** A refusal with a message that can go straight into a toast. */
@@ -156,9 +156,24 @@ export async function setCell(tx: AnyDb, userId: string, sessionId: string, memb
   if (ids.length === 0) {
     if (assignment) await tx.delete(assignments).where(eq(assignments.id, assignment.id));
   } else {
-    const values = { memberIds: ids, coupleId: await coupleOf(tx, ids), source: "manual" as const, status: "pending" as const, reason: "Chosen by hand" };
-    if (assignment) await tx.update(assignments).set({ ...values, updatedAt: sql`now()` }).where(eq(assignments.id, assignment.id));
-    else await tx.insert(assignments).values({ sessionId, ...values });
+    // Confirmations stay with the people who gave them.
+    const confirmed = (assignment?.confirmedMemberIds ?? []).filter((id) => ids.includes(id));
+    const values = {
+      memberIds: ids,
+      coupleId: await coupleOf(tx, ids),
+      source: "manual" as const,
+      status: confirmed.length === ids.length ? ("confirmed" as const) : ("pending" as const),
+      confirmedMemberIds: confirmed,
+      reason: "Chosen by hand",
+    };
+    if (assignment) {
+      await tx.update(assignments).set({ ...values, updatedAt: sql`now()` }).where(eq(assignments.id, assignment.id));
+      // Someone who said they can't make it and has now been replaced: their request is done.
+      await tx
+        .update(swapRequests)
+        .set({ status: "approved", resolvedBy: userId, resolvedAt: sql`now()`, updatedAt: sql`now()` })
+        .where(and(eq(swapRequests.assignmentId, assignment.id), eq(swapRequests.status, "open"), ids.length ? notInArray(swapRequests.memberId, ids) : sql`true`));
+    } else await tx.insert(assignments).values({ sessionId, ...values });
   }
   await audit(tx, { userId, action: "update", entity: "assignment", entityId: session.id, diff: { before: assignment?.memberIds ?? [], after: ids } });
 }
@@ -196,6 +211,17 @@ export async function swapCells(tx: AnyDb, userId: string, fromId: string, toId:
   const rows = [...moved(from.assignment, toId, to.assignment?.allowMixed ?? false), ...moved(to.assignment, fromId, from.assignment?.allowMixed ?? false)];
   if (rows.length > 0) await tx.insert(assignments).values(rows);
   await audit(tx, { userId, action: "swap", entity: "assignment", diff: { from: fromId, to: toId } });
+}
+
+/** Keep the person after all: their "can't make it" request is closed and nothing changes. */
+export async function dismissSwapRequest(tx: AnyDb, userId: string, requestId: string) {
+  const [row] = await tx
+    .update(swapRequests)
+    .set({ status: "rejected", resolvedBy: userId, resolvedAt: sql`now()`, updatedAt: sql`now()` })
+    .where(and(eq(swapRequests.id, requestId), eq(swapRequests.status, "open")))
+    .returning({ id: swapRequests.id });
+  if (!row) throw new ScheduleError("That request has already been dealt with.");
+  await audit(tx, { userId, action: "swap_rejected", entity: "swap_request", entityId: requestId });
 }
 
 /** Publish, or move back to draft. Published months count as history for the no-repeat rule. */

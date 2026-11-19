@@ -9,6 +9,8 @@ import { CircleAlert, CircleCheck, Info, LoaderCircle, MessageCircle, Printer, R
 import { generateAction, setStatusAction, swapCellsAction } from "@/app/(app)/schedule/actions";
 import { CellPanel, type PanelMember, type PanelSession } from "@/components/schedule/cell-panel";
 import { MonthGrid } from "@/components/schedule/month-grid";
+import { RequestsCard } from "@/components/schedule/requests-card";
+import type { OpenRequest } from "@/db/queries/schedule";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { IssueLine } from "@/lib/schedule/describe-issues";
@@ -59,6 +61,7 @@ export function ScheduleBuilder({
   rules,
   lockedCount,
   notices,
+  requests,
 }: {
   month: string;
   monthName: string;
@@ -75,6 +78,7 @@ export function ScheduleBuilder({
   rules: string[];
   lockedCount: number;
   notices: React.ReactNode;
+  requests: OpenRequest[];
 }) {
   const router = useRouter();
   const [selected, setSelected] = React.useState<string | null>(null);
@@ -156,7 +160,7 @@ export function ScheduleBuilder({
           )
         ) : null}
         <Button asChild variant="ghost">
-          <Link href={`/sheet?month=${month}`}>
+          <Link href={`/sheet/${month}`}>
             <Printer />
             Sheet & print
           </Link>
@@ -178,6 +182,8 @@ export function ScheduleBuilder({
           ))}
         </ul>
       ) : null}
+
+      <RequestsCard requests={requests} canEdit={canEdit} onOpen={setSelected} />
 
       {notices}
 
@@ -261,7 +267,7 @@ export function ScheduleBuilder({
       </div>
 
       {built ? (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <Warnings issues={issues} onOpen={setSelected} />
           <Loads loads={loads} past={past} lockedCount={lockedCount} />
         </div>

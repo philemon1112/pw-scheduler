@@ -1,9 +1,14 @@
 import "server-only";
 
-import { asc, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 
 import { db } from "@/db/client";
-import { assignments, members, schedules, sessions, slots, specialDayRules } from "@/db/schema";
+import { loadTemplates } from "@/db/messages-data";
+import { assignments, locations, members, schedules, sessions, slots, specialDayRules, swapRequests } from "@/db/schema";
+import { WEEKDAY_NAMES, weekdayOf } from "@/lib/dates/calendar";
+import { formatTimeRange } from "@/lib/dates/time";
+import { dayMonth } from "@/lib/messages/compose";
+import { fill, greetingAt } from "@/lib/messages/templates";
 import { resolveMonthSessions } from "@/lib/dates/sessions";
 import { fromResolved, type Person, type ViewLocation, type ViewSession } from "@/lib/schedule/month-view";
 
@@ -113,4 +118,70 @@ export async function getMonthView(month: string): Promise<MonthView> {
 /** Months that have a schedule, newest first, for the month picker. */
 export async function listScheduleMonths() {
   return db().select({ month: schedules.month, status: schedules.status }).from(schedules).orderBy(asc(schedules.month));
+}
+
+export interface OpenRequest {
+  id: string;
+  sessionId: string;
+  who: string;
+  when: string;
+  reason: string | null;
+  asks: { memberId: string; name: string; phone: string | null; text: string }[];
+}
+
+/**
+ * "I can't make it" requests for a month (§10.1, §13), each with the
+ * engine's suggested replacements and a ready "could you cover?" message.
+ */
+export async function listOpenRequests(month: string): Promise<OpenRequest[]> {
+  const rows = await db()
+    .select({ request: swapRequests, session: sessions, memberIds: assignments.memberIds, location: locations.messageName })
+    .from(swapRequests)
+    .innerJoin(assignments, eq(assignments.id, swapRequests.assignmentId))
+    .innerJoin(sessions, eq(sessions.id, assignments.sessionId))
+    .innerJoin(schedules, eq(schedules.id, sessions.scheduleId))
+    .innerJoin(locations, eq(locations.id, sessions.locationId))
+    .where(and(eq(schedules.month, month), eq(swapRequests.status, "open")))
+    .orderBy(asc(sessions.date), asc(sessions.startTime));
+  if (rows.length === 0) return [];
+
+  const ids = [...new Set(rows.flatMap((r) => [r.request.memberId, ...r.memberIds, ...(r.request.suggestedMemberIds ?? [])]))];
+  const people = await db().select({ id: members.id, title: members.title, name: members.displayName, phone: members.phoneE164 }).from(members).where(inArray(members.id, ids));
+  const byId = new Map(people.map((p) => [p.id, p]));
+  const titledName = (id: string) => {
+    const p = byId.get(id);
+    return p ? `${p.title} ${p.name}` : "Someone";
+  };
+  const template = (await loadTemplates(db())).swap_offer;
+  const greeting = greetingAt(new Date());
+
+  return rows.map(({ request, session, memberIds, location }) => {
+    const staying = memberIds.filter((id) => id !== request.memberId);
+    const day = WEEKDAY_NAMES[weekdayOf(session.date)];
+    const time = formatTimeRange(session.startTime, session.endTime);
+    return {
+      id: request.id,
+      sessionId: session.id,
+      who: titledName(request.memberId),
+      when: `${day.slice(0, 3)} ${dayMonth(session.date)} · ${time} · ${location}`,
+      reason: request.reason,
+      asks: (request.suggestedMemberIds ?? [])
+        .filter((id) => byId.has(id))
+        .map((id) => ({
+          memberId: id,
+          name: titledName(id),
+          phone: byId.get(id)?.phone ?? null,
+          text: fill(template, {
+            greeting,
+            name: titledName(id),
+            title: byId.get(id)?.title ?? "",
+            day,
+            date: dayMonth(session.date),
+            time,
+            location,
+            partner: staying.length ? staying.map(titledName).join(" & ") : "a partner to be confirmed",
+          }),
+        })),
+    };
+  });
 }

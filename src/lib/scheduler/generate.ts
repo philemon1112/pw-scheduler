@@ -9,6 +9,8 @@ const DEFAULT_ITERATIONS = 300;
 const NOISE = 30;
 
 interface Candidates {
+  /** Everyone eligible for the session. */
+  people: number[];
   /** Flat [a0, b0, a1, b1, …]. */
   pairs: Int32Array;
   /** The part of each pair's cost that never changes: history, preferences. */
@@ -39,7 +41,7 @@ function candidatesFor(P: Problem, s: number): Candidates {
       cost.push(c);
     }
   }
-  return { pairs: Int32Array.from(pairs), fixedCost: Float64Array.from(cost) };
+  return { people, pairs: Int32Array.from(pairs), fixedCost: Float64Array.from(cost) };
 }
 
 /** Running totals for one greedy pass. */
@@ -48,13 +50,15 @@ class Running {
   busy: Uint8Array;
   weekCount: Uint8Array;
   slotUse: Uint8Array;
-  pairUse = new Map<number, number>();
+  /** Times each pair has served this month, by pair key (M × M). */
+  pairUse: Uint8Array;
 
   constructor(private P: Problem) {
     this.load = new Int32Array(P.M);
     this.busy = new Uint8Array(P.M * 32);
     this.weekCount = new Uint8Array(P.M * 8);
     this.slotUse = new Uint8Array(P.M * Math.max(P.slotCount, 1));
+    this.pairUse = new Uint8Array(P.M * P.M);
   }
 
   place(s: number, a: number, b: number) {
@@ -66,10 +70,7 @@ class Running {
       this.weekCount[m * 8 + P.week[s]] += 1;
       if (P.slot[s] >= 0) this.slotUse[m * P.slotCount + P.slot[s]] += 1;
     }
-    if (a >= 0 && b >= 0 && P.partner[a] !== b) {
-      const k = pairKey(P, a, b);
-      this.pairUse.set(k, (this.pairUse.get(k) ?? 0) + 1);
-    }
+    if (a >= 0 && b >= 0 && P.partner[a] !== b) this.pairUse[pairKey(P, a, b)] += 1;
   }
 
   free(m: number, s: number): boolean {
@@ -109,17 +110,23 @@ function greedy(P: Problem, base: Assignment, free: number[], cands: Candidates[
     .sort((x, y) => x.key - y.key)
     .map((x) => x.s);
 
+  // Each person's cost for a session, worked out once per session rather
+  // than once per pair: -1 marks someone not free.
+  const personal = new Float64Array(P.M);
   for (const s of order) {
-    const { pairs, fixedCost } = cands[s];
+    const { pairs, fixedCost, people } = cands[s];
+    for (const m of people) personal[m] = run.free(m, s) ? run.personCost(m, s) : -1;
     let bestA = -1;
     let bestB = -1;
     let best = Infinity;
     for (let c = 0; c < fixedCost.length; c += 1) {
       const a = pairs[c * 2];
       const b = pairs[c * 2 + 1];
-      if (!run.free(a, s) || !run.free(b, s)) continue;
-      let cost = fixedCost[c] + run.personCost(a, s) + run.personCost(b, s);
-      if (P.partner[a] !== b) cost += (run.pairUse.get(pairKey(P, a, b)) ?? 0) * P.weights.samePairThisMonth;
+      const ca = personal[a];
+      const cb = personal[b];
+      if (ca < 0 || cb < 0) continue;
+      let cost = fixedCost[c] + ca + cb;
+      if (P.partner[a] !== b) cost += run.pairUse[pairKey(P, a, b)] * P.weights.samePairThisMonth;
       if (noise) cost += rng() * noise;
       if (cost < best) {
         best = cost;

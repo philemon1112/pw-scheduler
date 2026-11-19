@@ -89,12 +89,14 @@ export async function loadMonthInput(database: AnyDb, month: string, seed = 1): 
   const [settingsRow, [schedule]] = await Promise.all([readSettings(database), database.select().from(schedules).where(eq(schedules.month, month)).limit(1)]);
 
   const [memberRows, availability, confirmations, away, coupleRows, ruleRows, history] = await Promise.all([
-    database.select().from(members),
+    // Fixed orders throughout: the engine is deterministic for a given input,
+    // so the input must come back the same way every time (same seed, same month).
+    database.select().from(members).orderBy(asc(members.displayName), asc(members.id)),
     database.select({ memberId: memberAvailability.memberId, slotId: memberAvailability.slotId }).from(memberAvailability),
     database.select({ memberId: memberMonthConfirmations.memberId }).from(memberMonthConfirmations).where(eq(memberMonthConfirmations.month, month)),
     database.select().from(memberUnavailableDates),
-    database.select().from(couples),
-    database.select().from(pairRules),
+    database.select().from(couples).orderBy(asc(couples.memberAId)),
+    database.select().from(pairRules).orderBy(asc(pairRules.memberAId), asc(pairRules.memberBId)),
     database.select({ a: pairHistory.memberLo, b: pairHistory.memberHi, month: pairHistory.month, isCouple: pairHistory.isCouple }).from(pairHistory).where(lt(pairHistory.month, month)),
   ]);
 
@@ -124,7 +126,7 @@ export async function loadMonthInput(database: AnyDb, month: string, seed = 1): 
       .from(sessions)
       .leftJoin(assignments, eq(assignments.sessionId, sessions.id))
       .where(eq(sessions.scheduleId, schedule.id))
-      .orderBy(asc(sessions.date), asc(sessions.startTime));
+      .orderBy(asc(sessions.date), asc(sessions.startTime), asc(sessions.locationId), asc(sessions.id));
     engineSessions = rows.map(({ session }) => ({
       id: session.id,
       slotId: session.slotId,

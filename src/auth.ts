@@ -67,6 +67,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return { id: owner.id, email: owner.email, name: owner.name, role: owner.role };
         }
 
+        // A removed account, or an invite not yet accepted, can't sign in.
+        if (user.disabledAt || user.inviteTokenHash) {
+          await verifyPassword(password, DUMMY_HASH);
+          return null;
+        }
         if (!(await verifyPassword(password, user.passwordHash))) return null;
         await db().update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
         return { id: user.id, email: user.email, name: user.name, role: user.role };

@@ -8,7 +8,7 @@ import type { AnyDb } from "./types";
  */
 export async function audit(
   database: AnyDb,
-  entry: { userId: string; action: string; entity: string; entityId?: string | null; diff?: unknown }
+  entry: { userId: string | null; action: string; entity: string; entityId?: string | null; diff?: unknown }
 ) {
   await database.insert(auditLog).values({
     userId: entry.userId,

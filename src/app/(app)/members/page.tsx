@@ -10,8 +10,9 @@ import { requireUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Members" };
 
-export default async function MembersPage() {
+export default async function MembersPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const user = await requireUser();
+  const { q } = await searchParams;
   const month = monthOf(todayInAccra());
   const [people, places, settings] = await Promise.all([listMembers(month), listLocations(), getSettings()]);
 
@@ -28,6 +29,7 @@ export default async function MembersPage() {
       month={month}
       canEdit={hasRole(user, "editor")}
       isOwner={hasRole(user, "owner")}
+      initialQuery={typeof q === "string" ? q.slice(0, 80) : ""}
     />
   );
 }

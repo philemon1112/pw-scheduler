@@ -40,6 +40,7 @@ const blank = (): Form => ({
   active: true,
   pausedUntil: null,
   partnerId: null,
+  alwaysTogether: false,
   neverIds: [],
   unavailable: [],
 });
@@ -137,14 +138,14 @@ function MemberForm({ onOpenChange, member, members, locations, limits, canEdit 
     router.refresh();
   };
 
-  const makeLink = async (mode: "create" | "revoke") => {
+  const makeLink = async (mode: "show" | "create" | "revoke") => {
     if (!member) return;
     setPending("link");
     const result = await memberLinkAction(member.id, mode).catch(() => null);
     setPending(null);
     if (!result?.ok) return void toast.error(result?.error ?? "That didn't go through.");
     setLink(result.url);
-    setHasLink(mode === "create");
+    setHasLink(mode !== "revoke");
     setCopied(false);
     if (mode === "revoke") toast.success("Link revoked — the old one no longer works");
   };
@@ -357,7 +358,7 @@ function MemberForm({ onOpenChange, member, members, locations, limits, canEdit 
             </Button>
           </Section>
 
-          <Section title="Partners" hint="Couples serve together as one pair. Anyone on the never list is never paired with them.">
+          <Section title="Partners" hint="A couple usually serves together, and can also serve in a Bro or Sis pair unless you keep them together. Anyone on the never list is never paired with them.">
             <div className="grid gap-1.5">
               <Label htmlFor="m-partner">Husband or wife</Label>
               <NativeSelect id="m-partner" value={form.partnerId ?? ""} onChange={(event) => set("partnerId", event.target.value || null)}>
@@ -369,6 +370,15 @@ function MemberForm({ onOpenChange, member, members, locations, limits, canEdit 
                 ))}
               </NativeSelect>
             </div>
+            {form.partnerId ? (
+              <label className="flex items-start justify-between gap-3" htmlFor="m-together">
+                <span>
+                  <span className="block text-[0.875rem] font-medium">Always together</span>
+                  <span className="block text-[0.75rem] text-muted-foreground">Only ever place them with each other, never in a separate Bro or Sis pair.</span>
+                </span>
+                <Switch id="m-together" checked={form.alwaysTogether} onCheckedChange={(value) => set("alwaysTogether", value)} />
+              </label>
+            ) : null}
             <div className="grid gap-2">
               <Label htmlFor="m-never">Never pair with</Label>
               {form.neverIds.length > 0 ? (
@@ -435,13 +445,19 @@ function MemberForm({ onOpenChange, member, members, locations, limits, canEdit 
                       {copied ? <Check /> : <Copy />}
                     </Button>
                   </div>
-                  <p className="text-[0.6875rem] text-muted-foreground">Copy it now — it isn&apos;t stored, so it can&apos;t be shown again. Making a new one stops this one working.</p>
+                  <p className="text-[0.6875rem] text-muted-foreground">Only for them: it shows their sessions and lets them set their availability. Making a new one stops this one working.</p>
                 </div>
               ) : (
-                <p className="text-[0.8125rem] text-muted-foreground">{hasLink ? "A link has been made. Make a new one to copy it again." : "No link yet."}</p>
+                <p className="text-[0.8125rem] text-muted-foreground">{hasLink ? "They have a link." : "No link yet."}</p>
               )}
               <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={() => void makeLink("create")}>
+                {hasLink && !link ? (
+                  <Button type="button" variant="outline" size="sm" onClick={() => void makeLink("show")}>
+                    <Link2 />
+                    Show link
+                  </Button>
+                ) : null}
+                <Button type="button" variant={hasLink ? "ghost" : "outline"} size="sm" onClick={() => void makeLink("create")}>
                   {pending === "link" ? <LoaderCircle className="animate-spin" /> : <Link2 />}
                   {hasLink ? "Make a new link" : "Make link"}
                 </Button>

@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { History } from "lucide-react";
 
-import { EmptyState } from "@/components/empty-state";
+import { HistoryView } from "@/components/history/history-view";
 import { PageHeader } from "@/components/page-header";
+import { getHistory } from "@/db/queries/history";
+import { hasRole } from "@/lib/auth/roles";
+import { requireUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "History" };
 
-export default function Page() {
+export default async function HistoryPage() {
+  const user = await requireUser();
+  const { sessions, people, months } = await getHistory();
   return (
     <>
-      <PageHeader title="History" description="Who has served with whom, and when." />
-      <EmptyState
-        icon={History}
-        title="No history yet"
-        hint="Pair history arrives in milestone 8, built from imported and published months."
-        className="rise bg-card"
-      />
+      <PageHeader title="History" description="Who has served with whom, and when. Imported and published months count." />
+      <HistoryView sessions={sessions} people={people} months={months} canImport={hasRole(user, "editor")} />
     </>
   );
 }

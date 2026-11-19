@@ -94,6 +94,17 @@ export async function applySeed(database: AnyDb, plan: SeedPlan, raw: unknown): 
       }
     }
 
+    // The weekend message lists MTN first, as Lemon's Thursday message does (D27).
+    // Only set when it was never chosen, so a change made in Messages survives.
+    const messageOrder = ["mtn", "police"].map((key) => locationIds.get(key)).filter((id): id is string => !!id);
+    if (messageOrder.length > 0) {
+      await tx.insert(settings).values({ id: 1 }).onConflictDoNothing();
+      await tx
+        .update(settings)
+        .set({ messageLocationOrder: [...messageOrder, ...[...locationIds.values()].filter((id) => !messageOrder.includes(id))] })
+        .where(and(eq(settings.id, 1), sql`${settings.messageLocationOrder} is null`));
+    }
+
     // Members, added only.
     const added = await tx
       .insert(members)

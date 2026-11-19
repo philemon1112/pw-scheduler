@@ -1,8 +1,12 @@
 import "server-only";
 
+import { cache } from "react";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
+import { db } from "@/db/client";
+import { users } from "@/db/schema";
 import { hasRole } from "@/lib/auth/roles";
 import type { Role } from "@/types/next-auth";
 
@@ -15,16 +19,18 @@ export { hasRole };
  */
 export type SessionUser = { id: string; email: string; name: string; role: Role };
 
-export async function currentUser(): Promise<SessionUser | null> {
+/**
+ * The signed-in user, read fresh from the database once per request: a
+ * session is a 30-day JWT, so without this a removed account or a changed
+ * role would keep working until the token expired.
+ */
+export const currentUser = cache(async (): Promise<SessionUser | null> => {
   const session = await auth();
   if (!session?.user?.id) return null;
-  return {
-    id: session.user.id,
-    email: session.user.email ?? "",
-    name: session.user.name ?? "",
-    role: session.user.role,
-  };
-}
+  const [row] = await db().select({ id: users.id, email: users.email, name: users.name, role: users.role, disabledAt: users.disabledAt }).from(users).where(eq(users.id, session.user.id)).limit(1);
+  if (!row || row.disabledAt) return null;
+  return { id: row.id, email: row.email, name: row.name, role: row.role };
+});
 
 /** For pages: no session means the sign-in screen. */
 export async function requireUser(): Promise<SessionUser> {
@@ -38,5 +44,12 @@ export async function requireRole(needed: Role): Promise<SessionUser> {
   const user = await currentUser();
   if (!user) throw new Error("Not signed in.");
   if (!hasRole(user, needed)) throw new Error("You don't have permission to do that.");
+  return user;
+}
+
+/** For pages that need a role: anyone signed in without it goes to `fallback`, not an error. */
+export async function requirePageRole(needed: Role, fallback = "/schedule"): Promise<SessionUser> {
+  const user = await requireUser();
+  if (!hasRole(user, needed)) redirect(fallback);
   return user;
 }
