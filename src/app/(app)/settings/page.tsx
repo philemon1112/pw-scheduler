@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 
+import Link from "next/link";
+import { ChevronRight, FileJson, FileSpreadsheet, History, KeyRound, Users } from "lucide-react";
+
 import { PageHeader } from "@/components/page-header";
+import { WeightsCard } from "@/components/settings/weights-card";
+import { DEFAULT_WEIGHTS, weightsFrom } from "@/lib/scheduler/problem";
 import { SettingsView, type WeekRuleExample } from "@/components/settings/settings-view";
 import { listLocations } from "@/db/queries/locations";
 import { getSettings } from "@/db/queries/settings";
@@ -58,6 +63,42 @@ export default async function SettingsPage() {
         limits={PRIVILEGES.map((p) => ({ label: PRIVILEGE_LABELS[p], value: settings.privilegeLimits[p] }))}
         canEdit={hasRole(user, "owner")}
       />
+      <div className="mt-4 grid grid-cols-1 gap-4">
+        {hasRole(user, "owner") ? <WeightsCard weights={weightsFrom(settings.scoringWeights)} defaults={DEFAULT_WEIGHTS} custom={settings.scoringWeights !== null} /> : null}
+        <nav aria-label="More settings" className="rise grid gap-1 rounded-2xl border border-border bg-card p-2 shadow-card">
+          {[
+            ...(hasRole(user, "owner")
+              ? [
+                  { href: "/settings/users", icon: Users, title: "Users and invites", hint: "Who can open the app" },
+                  { href: "/settings/activity", icon: History, title: "Activity", hint: "Publishing, swaps, imports and edits" },
+                ]
+              : []),
+            { href: "/settings/account", icon: KeyRound, title: "Your account", hint: "Change your password" },
+          ].map((item) => (
+            <Link key={item.href} href={item.href} className="row-hover flex min-h-14 items-center gap-3 rounded-xl px-3 py-2">
+              <item.icon className="size-4 text-primary" />
+              <span className="grow">
+                <span className="block text-[0.9375rem] font-medium">{item.title}</span>
+                <span className="block text-[0.8125rem] text-muted-foreground">{item.hint}</span>
+              </span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          ))}
+          {hasRole(user, "owner") ? (
+            <div className="flex flex-wrap items-center gap-2 border-t border-border/70 px-3 pt-3 pb-1">
+              <span className="grow text-[0.8125rem] text-muted-foreground">Export everything</span>
+              <a href="/settings/export/json" download className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-border px-3 text-[0.8125rem] font-medium pointer-coarse:min-h-11">
+                <FileJson className="size-4" />
+                JSON
+              </a>
+              <a href="/settings/export/xlsx" download className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-border px-3 text-[0.8125rem] font-medium pointer-coarse:min-h-11">
+                <FileSpreadsheet className="size-4" />
+                .xlsx
+              </a>
+            </div>
+          ) : null}
+        </nav>
+      </div>
     </>
   );
 }

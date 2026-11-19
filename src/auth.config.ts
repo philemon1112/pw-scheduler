@@ -10,7 +10,7 @@ import type { Role } from "@/types/next-auth";
  */
 
 /** Routes anyone may open (§14). Everything else needs a session. */
-export const PUBLIC_PATHS = [/^\/login(\/|$)/, /^\/m\//, /^\/api\/ics\//, /^\/api\/cal\//, /^\/api\/auth\//];
+export const PUBLIC_PATHS = [/^\/login(\/|$)/, /^\/invite\//, /^\/m\//, /^\/api\/ics\//, /^\/api\/cal\//, /^\/api\/auth\//];
 
 export const isPublicPath = (pathname: string) => PUBLIC_PATHS.some((pattern) => pattern.test(pathname));
 

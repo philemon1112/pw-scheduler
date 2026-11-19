@@ -75,6 +75,11 @@ export const users = pgTable("users", {
   role: roleEnum("role").notNull().default("editor"),
   invitedBy: uuid("invited_by"),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
+  /** SHA-256 of a pending invite's token; null once the account is set up. */
+  inviteTokenHash: varchar("invite_token_hash", { length: 64 }).unique(),
+  inviteExpiresAt: timestamp("invite_expires_at", { withTimezone: true }),
+  /** Removed by the owner: can't sign in, but their audit history stays. */
+  disabledAt: timestamp("disabled_at", { withTimezone: true }),
   ...stamps,
 });
 
@@ -102,6 +107,8 @@ export const settings = pgTable(
     /** Scoring weights for the scheduler; null means the built-in defaults. */
     scoringWeights: jsonb("scoring_weights").$type<Record<string, number>>(),
     printDefaults: jsonb("print_defaults").$type<Record<string, unknown>>(),
+    /** Order of locations in the weekend group message; null means their sort order. */
+    messageLocationOrder: uuid("message_location_order").array(),
     ...stamps,
   },
   (t) => [check("settings_single_row", sql`${t.id} = 1`)]
@@ -176,6 +183,8 @@ export const members = pgTable(
     pausedUntil: date("paused_until"),
     /** SHA-256 of the member's private link token; the raw token is never stored. */
     publicTokenHash: varchar("public_token_hash", { length: 64 }).unique(),
+    /** The same token encrypted with a key from AUTH_SECRET, so the app can show and send the link again (D26). */
+    publicTokenEnc: text("public_token_enc"),
     archivedAt: timestamp("archived_at", { withTimezone: true }),
     ...stamps,
   },
@@ -197,7 +206,8 @@ export const couples = pgTable(
       .notNull()
       .references(() => members.id),
     displayLabel: text("display_label").notNull(),
-    alwaysTogether: boolean("always_together").notNull().default(true),
+    /** Only ever serve with each other. Off by default: a spouse can also serve in a same-gender pair. */
+    alwaysTogether: boolean("always_together").notNull().default(false),
     ...stamps,
   },
   (t) => [
@@ -354,6 +364,8 @@ export const assignments = pgTable(
     status: assignmentStatusEnum("status").notNull().default("pending"),
     /** The scheduler's one-line explanation: "not paired since Jul · 2 of 4 used". */
     reason: text("reason"),
+    /** Who has confirmed from their private page; the status becomes confirmed when both have. */
+    confirmedMemberIds: uuid("confirmed_member_ids").array().notNull().default(sql`'{}'::uuid[]`),
     ...stamps,
   },
   (t) => [

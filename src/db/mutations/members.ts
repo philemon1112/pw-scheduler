@@ -113,9 +113,12 @@ export async function saveMember(tx: AnyDb, userId: string, input: MemberInput):
     if (partner) {
       const [a, b] = sorted(id, partner.id);
       const husband = input.title === "Bro" ? input.lastName : partner.lastName;
-      await tx.insert(couples).values({ memberAId: a, memberBId: b, displayLabel: `Bro & Sis ${husband}`.trim() });
+      await tx.insert(couples).values({ memberAId: a, memberBId: b, displayLabel: `Bro & Sis ${husband}`.trim(), alwaysTogether: input.alwaysTogether });
     }
     await audit(tx, { userId, action: "couple", entity: "member", entityId: id, diff: { from: currentPartner, to: input.partnerId } });
+  } else if (current[0] && current[0].alwaysTogether !== input.alwaysTogether) {
+    await tx.update(couples).set({ alwaysTogether: input.alwaysTogether }).where(eq(couples.id, current[0].id));
+    await audit(tx, { userId, action: "update", entity: "couple", entityId: current[0].id, diff: { alwaysTogether: input.alwaysTogether } });
   }
 
   // Never-pair rules involving this member: replaced as a set.

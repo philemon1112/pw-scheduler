@@ -57,7 +57,7 @@ describe("generating a month", () => {
     const summary = await generateMonth(db, userId, "2026-12", 42);
     const hard = summary.evaluation.issues.filter((i) => ["over_limit", "same_day", "unavailable", "mixed_pair", "never_pair"].includes(i.kind));
     expect(hard).toEqual([]);
-    expect(summary.ms).toBeLessThan(2000);
+    // Speed is checked in the engine's own test, away from the database and other test files.
     // Everyone is a publisher with a limit of 2 until privileges are set: 41 × 2 places can't cover the month.
     const { needed, available } = summary.evaluation.capacity;
     expect(available).toBeLessThan(needed);

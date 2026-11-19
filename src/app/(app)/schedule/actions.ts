@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db, transaction } from "@/db/client";
-import { generateMonth, ScheduleError, setAllowMixed, setCell, setLocked, setScheduleStatus, swapCells } from "@/db/mutations/schedule";
+import { dismissSwapRequest, generateMonth, ScheduleError, setAllowMixed, setCell, setLocked, setScheduleStatus, swapCells } from "@/db/mutations/schedule";
 import { loadMonthInput } from "@/db/scheduler-input";
 import { requireRole } from "@/lib/auth/session";
 import { isMonth } from "@/lib/dates/calendar";
@@ -87,6 +87,16 @@ export async function setStatusAction(month: string, status: "draft" | "publishe
   if (!isMonth(month) || (status !== "draft" && status !== "published")) return { ok: false, error: "That didn't look right." };
   return run(async () => {
     await transaction((tx) => setScheduleStatus(tx, user.id, month, status));
+    return {};
+  });
+}
+
+/** "Keep them": close a can't-make-it request without changing the session. */
+export async function dismissRequestAction(requestId: string): Promise<Result> {
+  const user = await requireRole("editor");
+  if (!Uuid.safeParse(requestId).success) return { ok: false, error: "That request didn't look right." };
+  return run(async () => {
+    await transaction((tx) => dismissSwapRequest(tx, user.id, requestId));
     return {};
   });
 }

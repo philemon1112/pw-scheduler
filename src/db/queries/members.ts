@@ -78,6 +78,7 @@ export async function listMembers(month: string): Promise<MemberRow[]> {
       pausedUntil: person.pausedUntil,
       partnerId: couple ? (couple.memberAId === person.id ? couple.memberBId : couple.memberAId) : null,
       coupleLabel: couple?.displayLabel ?? null,
+      alwaysTogether: couple?.alwaysTogether ?? false,
       neverIds: never.filter((r) => r.memberAId === person.id || r.memberBId === person.id).map((r) => (r.memberAId === person.id ? r.memberBId : r.memberAId)),
       unavailable: away.filter((a) => a.memberId === person.id).map((a) => ({ start: a.startDate, end: a.endDate, reason: a.reason ?? "" })),
       hasLink: Boolean(person.publicTokenHash),

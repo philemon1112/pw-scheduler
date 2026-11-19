@@ -11,7 +11,7 @@ import { members, settings } from "@/db/schema";
 import { requireRole } from "@/lib/auth/session";
 import { MemberInput } from "@/lib/members/input";
 import { firstIssue, type Result } from "@/lib/result";
-import { hashToken, newToken } from "@/lib/tokens";
+import { hashToken, memberUrl, newToken, openToken, sealToken } from "@/lib/tokens";
 
 /**
  * Members (§10.3). Thin on purpose: check who is asking, validate, hand off
@@ -51,20 +51,28 @@ const Id = z.string().uuid();
  * token is returned once, here, and never stored (DECISIONS D7) — so the
  * link can be copied now, and "show it again" means making a new one.
  */
-export async function memberLinkAction(memberId: string, mode: "create" | "revoke"): Promise<Result<{ url: string | null }>> {
+/**
+ * A member's private link (§13): show the current one, make a new one (the
+ * old stops working), or revoke it.
+ */
+export async function memberLinkAction(memberId: string, mode: "show" | "create" | "revoke"): Promise<Result<{ url: string | null }>> {
   const user = await requireRole("editor");
   if (!Id.safeParse(memberId).success) return { ok: false, error: "That member isn't on the list any more." };
+  if (mode === "show") {
+    const [row] = await db().select({ enc: members.publicTokenEnc }).from(members).where(eq(members.id, memberId));
+    const token = openToken(row?.enc);
+    return token ? { ok: true, url: memberUrl(token) } : { ok: false, error: "This link was made before links could be shown again. Make a new one." };
+  }
   const token = mode === "create" ? newToken() : null;
   const [row] = await db()
     .update(members)
-    .set({ publicTokenHash: token ? hashToken(token) : null, updatedAt: new Date() })
+    .set({ publicTokenHash: token ? hashToken(token) : null, publicTokenEnc: token ? sealToken(token) : null, updatedAt: new Date() })
     .where(eq(members.id, memberId))
     .returning({ id: members.id });
   if (!row) return { ok: false, error: "That member isn't on the list any more." };
   await audit(db(), { userId: user.id, action: mode === "create" ? "link_created" : "link_revoked", entity: "member", entityId: memberId });
   refresh();
-  const base = process.env.APP_URL?.replace(/\/$/, "") ?? "";
-  return { ok: true, url: token ? `${base}/m/${token}` : null };
+  return { ok: true, url: token ? memberUrl(token) : null };
 }
 
 /** Archived, never deleted: their past sessions are the pair history. */
@@ -73,7 +81,7 @@ export async function archiveMemberAction(memberId: string): Promise<Result> {
   if (!Id.safeParse(memberId).success) return { ok: false, error: "That member isn't on the list any more." };
   const [row] = await db()
     .update(members)
-    .set({ archivedAt: new Date(), active: false, publicTokenHash: null, updatedAt: new Date() })
+    .set({ archivedAt: new Date(), active: false, publicTokenHash: null, publicTokenEnc: null, updatedAt: new Date() })
     .where(eq(members.id, memberId))
     .returning({ name: members.displayName });
   if (!row) return { ok: false, error: "That member isn't on the list any more." };

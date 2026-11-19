@@ -8,7 +8,7 @@ import { ScheduleBuilder, type BuilderSummary } from "@/components/schedule/sche
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/client";
-import { getMonthView, listScheduleMonths } from "@/db/queries/schedule";
+import { getMonthView, listOpenRequests, listScheduleMonths } from "@/db/queries/schedule";
 import { loadMonthInput } from "@/db/scheduler-input";
 import { hasRole } from "@/lib/auth/roles";
 import { requireUser } from "@/lib/auth/session";
@@ -38,7 +38,7 @@ export default async function MonthPage({ params }: { params: Promise<{ month: s
   const { month } = await params;
   if (!isMonth(month)) notFound();
 
-  const [view, months, { input, settings }] = await Promise.all([getMonthView(month), listScheduleMonths(), loadMonthInput(db(), month)]);
+  const [view, months, { input, settings }, requests] = await Promise.all([getMonthView(month), listScheduleMonths(), loadMonthInput(db(), month), listOpenRequests(month)]);
   const evaluation = evaluate(input);
   const grids = buildGrids(view.locations, view.sessions);
   const specials = monthSpecials(view.sessions);
@@ -176,6 +176,7 @@ export default async function MonthPage({ params }: { params: Promise<{ month: s
         rules={rules}
         lockedCount={view.sessions.filter((s) => s.locked).length}
         notices={notices}
+        requests={requests}
       />
     </>
   );

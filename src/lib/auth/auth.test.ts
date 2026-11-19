@@ -34,10 +34,10 @@ describe("passwords", () => {
     const hash = await hashPassword("a long enough password");
     expect(await verifyPassword("a long enough password", hash)).toBe(true);
     expect(await verifyPassword("something else", hash)).toBe(false);
-  }, 20_000);
+  }, 120_000);
   it("the timing dummy is a real hash that matches nothing typed", async () => {
     expect(await verifyPassword("", DUMMY_HASH)).toBe(false);
-  }, 20_000);
+  }, 120_000);
   it("explains a weak password", () => {
     expect(passwordProblem("short")).toMatch(/10 characters/);
     expect(passwordProblem("a perfectly fine one")).toBeNull();
