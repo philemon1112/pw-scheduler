@@ -39,3 +39,19 @@ export function nameIndex<T extends Nameable>(members: T[]): Map<string, T> {
 
 /** The member a name refers to, or null when it needs reviewing. */
 export const matchName = <T extends Nameable>(index: Map<string, T>, raw: string): T | null => index.get(nameKey(raw)) ?? null;
+
+/**
+ * Two names typed with nothing between them — "Davida AduseiComfort Owusua"
+ * — split where both halves are known people. A name already known, or one
+ * that can't be split that way, comes back as it was.
+ */
+export function splitKnownNames(raw: string, isKnown: (name: string) => boolean): string[] {
+  const name = cleanName(raw);
+  if (isKnown(name)) return [name];
+  for (let k = 2; k < name.length - 1; k += 1) {
+    const left = cleanName(name.slice(0, k));
+    const right = cleanName(name.slice(k));
+    if (left.length > 2 && right.length > 2 && isKnown(left) && isKnown(right)) return [left, right];
+  }
+  return [name];
+}

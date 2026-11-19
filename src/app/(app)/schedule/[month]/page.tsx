@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CalendarOff, ChevronLeft, ChevronRight, Info } from "lucide-react";
 
 import { PageHeader } from "@/components/page-header";
+import { AdoptMonth } from "@/components/schedule/adopt-month";
 import { ScheduleBuilder, type BuilderSummary } from "@/components/schedule/schedule-builder";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ export default async function MonthPage({ params }: { params: Promise<{ month: s
   const status = view.schedule ? view.schedule.status : "none";
   const past = status === "archived";
   const built = view.schedule !== null;
-  const badge = view.schedule ? (view.schedule.imported ? STATUS.imported : STATUS[view.schedule.status]) : STATUS.none;
+  const badge = view.schedule ? (view.schedule.imported && view.schedule.status === "archived" ? STATUS.imported : STATUS[view.schedule.status]) : STATUS.none;
 
   const names = new Map(input.members.map((m) => [m.id, m.name]));
   const locationName = new Map(view.locations.map((l) => [l.id, l.name]));
@@ -97,6 +98,7 @@ export default async function MonthPage({ params }: { params: Promise<{ month: s
           </ul>
         </div>
       ) : null}
+      {view.schedule?.imported && view.schedule.status === "archived" && month >= current && hasRole(user, "editor") ? <AdoptMonth month={month} monthName={monthLabel(month)} /> : null}
       {view.schedule?.imported ? (
         <p className="rise flex items-center gap-2 text-[0.8125rem] text-muted-foreground">
           <Info className="size-3.5 shrink-0" />

@@ -94,6 +94,15 @@ The app talks to a `localhost` URL with node-postgres; anything else goes throug
 6. **Messages:** "Make their links" on Monthly previews, then send each person their preview; the weekend message on Thursdays.
 7. **Settings → Users and invites:** invite anyone who helps you.
 
+## Using this month's schedule from your own file
+
+If the current month was made outside the app (Excel or Word):
+
+1. **History → Import a schedule**, choose the month and the file, check the review (every name matched, every column a slot), then **Import**.
+2. On that month's Schedule page, **Use this month in the app**. It becomes the published schedule: you can swap people, members see it on their pages, and **Messages → This weekend** builds the group message from it.
+
+The months after it are built in the app as usual, and avoid repeating its pairs.
+
 ## Smoke tests (Playwright)
 
 They run against a running app with the installed Google Chrome — no browser download. With the local database seeded and a production build running:

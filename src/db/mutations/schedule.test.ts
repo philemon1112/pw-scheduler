@@ -11,7 +11,7 @@ import { loadMonthInput } from "../scheduler-input";
 import { applySeed } from "../seed-apply";
 import { assignments, members, schedules, sessions, settings, specialDayRules, users } from "../schema";
 
-import { generateMonth, ScheduleError, setCell, setLocked, setScheduleStatus, swapCells } from "./schedule";
+import { adoptImportedMonth, generateMonth, ScheduleError, setCell, setLocked, setScheduleStatus, swapCells } from "./schedule";
 
 const raw = JSON.parse(readFileSync(new URL("../../../seed/pw-history-2026.json", import.meta.url), "utf8"));
 
@@ -165,3 +165,21 @@ describe("hand edits", () => {
     await expect(setCell(db, userId, past.id, [])).rejects.toThrow(/Past months/);
   });
 });
+
+describe("using an imported month in the app", () => {
+  it("makes a month that isn't over the live schedule, editable by hand, and leaves past months alone", async () => {
+    const { db, userId } = await seeded();
+    await expect(adoptImportedMonth(db, userId, "2026-09", "2026-11")).rejects.toThrow(/over/);
+    await adoptImportedMonth(db, userId, "2026-11", "2026-11");
+    const [nov] = await db.select().from(schedules).where(eq(schedules.month, "2026-11"));
+    expect(nov.status).toBe("published");
+    await expect(adoptImportedMonth(db, userId, "2026-11", "2026-11")).rejects.toThrow(/already/);
+
+    const [cell] = await db.select({ id: sessions.id }).from(sessions).where(eq(sessions.scheduleId, nov.id)).limit(1);
+    await setCell(db, userId, cell.id, []);
+    // Still history for December.
+    const { input } = await loadMonthInput(db, "2026-12");
+    expect(input.history.some((h) => h.month === "2026-11")).toBe(true);
+  });
+});
+

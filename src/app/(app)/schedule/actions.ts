@@ -6,10 +6,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { db, transaction } from "@/db/client";
-import { dismissSwapRequest, generateMonth, ScheduleError, setAllowMixed, setCell, setLocked, setScheduleStatus, swapCells } from "@/db/mutations/schedule";
+import { adoptImportedMonth, dismissSwapRequest, generateMonth, ScheduleError, setAllowMixed, setCell, setLocked, setScheduleStatus, swapCells } from "@/db/mutations/schedule";
 import { loadMonthInput } from "@/db/scheduler-input";
 import { requireRole } from "@/lib/auth/session";
-import { isMonth } from "@/lib/dates/calendar";
+import { isMonth, monthOf, todayInAccra } from "@/lib/dates/calendar";
 import type { Result } from "@/lib/result";
 import { suggest, type SessionSuggestions } from "@/lib/scheduler/suggest";
 
@@ -87,6 +87,16 @@ export async function setStatusAction(month: string, status: "draft" | "publishe
   if (!isMonth(month) || (status !== "draft" && status !== "published")) return { ok: false, error: "That didn't look right." };
   return run(async () => {
     await transaction((tx) => setScheduleStatus(tx, user.id, month, status));
+    return {};
+  });
+}
+
+/** An imported month that isn't over becomes this app's live schedule. */
+export async function adoptMonthAction(month: string): Promise<Result> {
+  const user = await requireRole("editor");
+  if (!isMonth(month)) return { ok: false, error: "That month didn't look right." };
+  return run(async () => {
+    await transaction((tx) => adoptImportedMonth(tx, user.id, month, monthOf(todayInAccra())));
     return {};
   });
 }

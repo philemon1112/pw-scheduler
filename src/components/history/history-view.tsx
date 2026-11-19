@@ -70,7 +70,7 @@ export function HistoryView({ sessions, people, months, canImport }: { sessions:
           <Button asChild variant="outline">
             <Link href="/history/import">
               <FileUp />
-              Import an old sheet
+              Import a schedule
             </Link>
           </Button>
         ) : null}

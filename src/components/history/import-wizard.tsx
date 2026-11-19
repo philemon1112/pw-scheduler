@@ -74,8 +74,14 @@ export function ImportWizard({ defaultMonth }: { defaultMonth: string }) {
           <Input id="imp-month" name="month" type="month" defaultValue={defaultMonth} required className="w-48" />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="imp-file">The sheet (.xlsx)</Label>
-          <Input id="imp-file" name="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required />
+          <Label htmlFor="imp-file">The schedule (Excel .xlsx or Word .docx)</Label>
+          <Input
+            id="imp-file"
+            name="file"
+            type="file"
+            accept=".xlsx,.docx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            required
+          />
           <p className="text-[0.75rem] text-muted-foreground">Laid out like the printed sheet: a coloured title row per location, a day row, a time row starting with WEEK, then Week 1, Week 2… with two names per cell.</p>
         </div>
         <Button type="submit" disabled={pending} className="justify-self-start">
