@@ -8,6 +8,7 @@ import { CommitInput, commitImport, ImportError, previewImport, type ImportPrevi
 import { requireRole } from "@/lib/auth/session";
 import { isMonth } from "@/lib/dates/calendar";
 import { parseSheet } from "@/lib/import/sheet-parse";
+import { readDocxGrid } from "@/lib/import/docx-grid";
 import { readXlsxGrid } from "@/lib/import/xlsx-grid";
 import type { Result } from "@/lib/result";
 
@@ -21,15 +22,17 @@ export async function previewImportAction(form: FormData): Promise<Result<{ prev
   if (!isMonth(month)) return { ok: false, error: "Choose which month the sheet is for." };
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Choose an .xlsx file." };
   if (file.size > MAX_BYTES) return { ok: false, error: "That file is larger than 1 MB. Is it the right one?" };
-  if (!/\.xlsx$/i.test(file.name)) return { ok: false, error: "Only .xlsx files can be read. In Excel, use Save As → Excel Workbook." };
+  const kind = /\.xlsx$/i.test(file.name) ? "xlsx" : /\.docx$/i.test(file.name) ? "docx" : null;
+  if (!kind) return { ok: false, error: "Only .xlsx (Excel) and .docx (Word) files can be read. An older .xls or .doc can be saved again in the newer format." };
   try {
-    const tables = parseSheet(await readXlsxGrid(await file.arrayBuffer()));
+    const data = await file.arrayBuffer();
+    const tables = parseSheet(kind === "xlsx" ? await readXlsxGrid(data) : await readDocxGrid(data));
     const preview = await transaction((tx) => previewImport(tx, user.id, { filename: file.name.slice(0, 200), month, tables }));
     return { ok: true, preview };
   } catch (error) {
     if (error instanceof ImportError) return { ok: false, error: error.message };
     console.error("import preview failed", error instanceof Error ? error.message : error);
-    return { ok: false, error: "That file couldn't be read. Make sure it's an .xlsx laid out like the printed sheet." };
+    return { ok: false, error: "That file couldn't be read. Make sure it's laid out like the printed sheet: a title row, a day row, a WEEK row, then Week 1, Week 2…" };
   }
 }
 

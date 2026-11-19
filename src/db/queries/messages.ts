@@ -7,7 +7,7 @@ import { loadMessageSessions, loadTemplates, messageLocations, type StoredMonth 
 import { members, messageLog, schedules } from "@/db/schema";
 import { addDays, daysInMonth, WEEKDAY_NAMES, weekdayOf } from "@/lib/dates/calendar";
 import { formatTimeRange } from "@/lib/dates/time";
-import { dayMonth, mySessions, partnersOf, titled, weekendBlocks, type MessageLocation } from "@/lib/messages/compose";
+import { dayMonth, mySessions, partnersOf, titled, weekendBlock, weekendBlocks, type MessageLocation } from "@/lib/messages/compose";
 import { fill, greetingAt, type MessageKind } from "@/lib/messages/templates";
 import { displayPhone } from "@/lib/members/phone";
 import { memberUrl, openToken } from "@/lib/tokens";
@@ -32,7 +32,10 @@ export interface PairMessage {
 export interface WeekendData {
   friday: string;
   sunday: string;
+  /** Both locations in one message. */
   text: string;
+  /** One message per location, each complete on its own, in the message order. */
+  messages: { locationId: string; name: string; text: string }[];
   months: StoredMonth[];
   locations: MessageLocation[];
   sessionCount: number;
@@ -113,6 +116,10 @@ export async function getWeekendData(friday: string, now = new Date()): Promise<
     friday,
     sunday,
     text: blocks ? fill(templates.weekend_group, { greeting, weekend_blocks: blocks }) : "",
+    messages: locations
+      .map((l) => ({ location: l, block: weekendBlock(l, sessions, true) }))
+      .filter((m): m is { location: MessageLocation; block: string } => m.block !== null)
+      .map(({ location, block }) => ({ locationId: location.id, name: location.messageName, text: fill(templates.weekend_group, { greeting, weekend_blocks: block }) })),
     months,
     locations,
     sessionCount: sessions.filter((s) => !s.isCancelled).length,

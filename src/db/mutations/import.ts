@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { WEEKDAY_NAMES } from "@/lib/dates/calendar";
 import { formatTimeRange } from "@/lib/dates/time";
-import { cleanName, matchName, nameIndex, nameKey, splitName } from "@/lib/import/names";
+import { cleanName, matchName, nameIndex, nameKey, splitKnownNames, splitName } from "@/lib/import/names";
 import { dateRows, startFrom, weekdayFrom, type ParsedTable } from "@/lib/import/sheet-parse";
 
 import { audit } from "../audit";
@@ -64,8 +64,13 @@ export async function previewImport(tx: AnyDb, userId: string, input: { filename
   if (input.tables.length === 0) throw new ImportError("No schedule found in that file. It needs a row starting with “WEEK”, like the printed sheet.");
   const { places, times, people, pairs } = await catalogue(tx);
   const index = nameIndex(people);
+  const coupleLabels = new Set(pairs.map((c) => c.label.toLowerCase()));
+  const known = (name: string) => index.has(nameKey(name)) || coupleLabels.has(name.toLowerCase());
+  // Names typed together without a break are split where both halves are
+  // known people; what is stored is what the review shows.
+  const parsed: ParsedTable[] = input.tables.map((t) => ({ ...t, weeks: t.weeks.map((w) => ({ ...w, cells: w.cells.map((cell) => cell.flatMap((n) => splitKnownNames(n, known))) })) }));
 
-  const tables = input.tables.map((table, i) => {
+  const tables = parsed.map((table, i) => {
     const words = tokens(table.title);
     const scored = places
       .map((p) => {
@@ -93,7 +98,7 @@ export async function previewImport(tx: AnyDb, userId: string, input: { filename
     };
   });
 
-  const raws = [...new Set(input.tables.flatMap((t) => t.weeks.flatMap((w) => w.cells.flat())))];
+  const raws = [...new Set(parsed.flatMap((t) => t.weeks.flatMap((w) => w.cells.flat())))];
   const names = raws.map((raw): { raw: string; match: NameMatch } => {
     const couple = pairs.find((c) => c.label.toLowerCase() === cleanName(raw).toLowerCase());
     if (couple) return { raw, match: { kind: "couple", id: couple.id } };
@@ -112,7 +117,7 @@ export async function previewImport(tx: AnyDb, userId: string, input: { filename
     blocked = own.n > 0;
   }
 
-  const [batch] = await tx.insert(importBatches).values({ sourceFilename: input.filename, month: input.month, raw: { tables: input.tables }, createdBy: userId }).returning({ id: importBatches.id });
+  const [batch] = await tx.insert(importBatches).values({ sourceFilename: input.filename, month: input.month, raw: { tables: parsed }, createdBy: userId }).returning({ id: importBatches.id });
 
   return {
     batchId: batch.id,

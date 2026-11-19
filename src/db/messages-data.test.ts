@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { planSeed } from "@/lib/import/seed-plan";
-import { mySessions, weekendBlocks, weekendFriday, whatsappLink } from "@/lib/messages/compose";
+import { mySessions, weekendBlock, weekendBlocks, weekendFriday, whatsappLink } from "@/lib/messages/compose";
 import { DEFAULT_TEMPLATES, fill, greetingAt } from "@/lib/messages/templates";
 import { testDb } from "@/test/pglite";
 
@@ -77,6 +77,17 @@ describe("the weekend group message", () => {
     const [{ sessions }, locations, templates] = await Promise.all([loadMessageSessions(db, friday, "2026-11-15"), messageLocations(db), loadTemplates(db)]);
     const text = fill(templates.weekend_group, { greeting: greetingAt(new Date("2026-11-12T14:00:00Z")), weekend_blocks: weekendBlocks(locations, sessions) });
     expect(text).toBe(EXPECTED);
+  });
+
+  it("splits into one complete message per location, each opening with “Please find”", async () => {
+    const db = await seeded();
+    const [{ sessions }, locations, templates] = await Promise.all([loadMessageSessions(db, "2026-11-13", "2026-11-15"), messageLocations(db), loadTemplates(db)]);
+    const greeting = greetingAt(new Date("2026-11-12T14:00:00Z"));
+    const [mtn, police] = locations.map((l) => fill(templates.weekend_group, { greeting, weekend_blocks: weekendBlock(l, sessions, true)! }));
+    const [mtnPart, policePart] = EXPECTED.split("\n\nAlso, find below");
+    expect(mtn).toBe(mtnPart);
+    expect(police).toBe(`Good Afternoon @all\nPlease find below${policePart}`);
+    expect(weekendBlock({ id: "nowhere", messageName: "Nowhere" }, sessions)).toBeNull();
   });
 
   it("leaves out cancelled sessions, shows the moved time, and adds the special day's note", () => {

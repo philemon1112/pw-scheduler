@@ -110,3 +110,42 @@ describe("importing an old sheet", () => {
     await expect(commitImport(db, userId, accept(preview))).rejects.toThrow(ImportError);
   });
 });
+
+describe("importing a Word schedule", () => {
+  /** A table cell the way Word writes a hand-typed one: names split over runs, pushed down by breaks or spaces. */
+  const cell = (xml: string, extra = "") => `<w:tc><w:tcPr>${extra}</w:tcPr><w:p>${xml}</w:p></w:tc>`;
+  const run = (text: string) => `<w:r><w:t xml:space="preserve">${text}</w:t></w:r>`;
+  const br = "<w:r><w:br/></w:r>";
+  const docx = async () => {
+    const JSZip = (await import("jszip")).default;
+    const row = (cells: string[]) => `<w:tr>${cells.join("")}</w:tr>`;
+    const table = [
+      row([cell(run("POLICE STATION - (Tuesday, Friday)"), '<w:gridSpan w:val="3"/><w:shd w:val="clear" w:color="auto" w:fill="B3E5A1"/>')]),
+      row([cell(""), cell(run("Tuesday")), cell(run("FRIDAY"))]),
+      row([cell(run("WEEK")), cell(run("4:00 – 6:00pm")), cell(run("6:00 – 8:00 AM"))]),
+      row([cell(run("Week 1")), cell(run("Asantewaa ") + run("Bittermann") + br + run("Julia Eshun")), cell(run("Davida Adusei") + run("Comfort Owusua"))]),
+      row([cell(run("Week 2")), cell(run("Abigail Boakye") + run(".          ") + run(" Bernice Sakyi")), cell(run("Comfort Owusua") + br + run("Lydia Mensah"))]),
+    ].join("");
+    const xml = `<?xml version="1.0"?><w:document xmlns:w="x"><w:body><w:p>${run("WESTLANDS ENGLISH CONGREGATION")}</w:p><w:p>${run("PUBLIC WITNESSING SCHEDULE – NOVEMBER")}</w:p><w:tbl>${table}</w:tbl></w:body></w:document>`;
+    const zip = new JSZip();
+    zip.file("word/document.xml", xml);
+    return zip.generateAsync({ type: "arraybuffer" });
+  };
+
+  it("reads Word tables, separating names by breaks, padding spaces, or by who is known", async () => {
+    const { readDocxGrid } = await import("@/lib/import/docx-grid");
+    const { db, userId } = await seeded();
+    const tables = parseSheet(await readDocxGrid(await docx()));
+    expect(tables).toHaveLength(1);
+    expect(tables[0]).toMatchObject({ title: "POLICE STATION - (Tuesday, Friday)", color: "#B3E5A1" });
+    const preview = await previewImport(db, userId, { filename: "nov.docx", month: "2026-10", tables });
+    expect(preview.tables[0].weeks.map((w) => w.cells)).toEqual([
+      [["Asantewaa Bittermann", "Julia Eshun"], ["Davida Adusei", "Comfort Owusua"]],
+      [["Abigail Boakye", "Bernice Sakyi"], ["Comfort Owusua", "Lydia Mensah"]],
+    ]);
+    expect(preview.names.every((n) => n.match)).toBe(true);
+    expect(preview.tables[0].columns.every((c) => c.slotId)).toBe(true);
+    const result = await commitImport(db, userId, accept(preview));
+    expect(result).toEqual({ sessions: 4, membersCreated: 0, skipped: 0 });
+  });
+});

@@ -118,3 +118,9 @@ An assignment has one status for the pair, so confirmations are kept per person 
 ## D31 — A basic Content Security Policy
 Everything is served from the app's own origin. Next's inline scripts need `'unsafe-inline'` without per-request nonces; tightening that to nonces is possible later. `Referrer-Policy: same-origin` keeps a member's token (in the path) from being sent to Google or WhatsApp when they tap a link; member pages also send `no-referrer` and `X-Robots-Tag: noindex`.
 
+## D32 — An imported month that isn't over can be used in the app
+Imported months are history and read-only. For the month in progress — brought in from Lemon's own file while later months are built here — "Use this month in the app" turns it into the published schedule: people can be swapped by hand, members see the sessions on their pages, the messages use it, and it still counts as pair history. Only a month from the current one on can be switched; past months stay as served.
+
+## D33 — Word schedules can be imported too
+The import reads .docx as well as .xlsx: Word tables become the same grid of cells (merged cells and the shaded title bars included), and the paragraphs above them are the title lines. In a hand-typed cell, line breaks, paragraph ends and runs of spaces all separate names, and two names typed with nothing between them ("Davida AduseiComfort Owusua") are split where both halves are known members. What the review shows is what is stored and imported.
+

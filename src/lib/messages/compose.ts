@@ -54,25 +54,35 @@ export const weekendFriday = (today: string): string => addDays(today, 4 - weekd
 export function weekendBlocks(locations: MessageLocation[], sessions: MessageSession[]): string {
   const blocks: string[] = [];
   for (const location of locations) {
-    const mine = sessions.filter((s) => s.locationId === location.id).sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime));
-    const live = mine.filter((s) => !s.isCancelled);
-    if (live.length === 0) continue;
-
-    const intro = `${blocks.length === 0 ? "Please find" : "Also, find"} below the public witnessing schedule from *Friday to Sunday* at the location near the *${location.messageName}*.`;
-    const days: string[] = [];
-    for (const date of [...new Set(live.map((s) => s.date))]) {
-      const lines = live
-        .filter((s) => s.date === date)
-        .map((s) => `*Time:* ${formatTimeRange(s.startTime, s.endTime)}\n*Partners:* ${partnersOf(s)}`);
-      days.push(`*${WEEKDAY_NAMES[weekdayOf(date)]}*\n${lines.join("\n\n")}`);
-    }
-    const notes = [...new Set(mine.filter((s) => s.messageNote && (s.isCancelled || s.specialDayName)).map((s) => s.messageNote!))];
-    const parts = [intro, days.join("\n\n")];
-    if (notes.length) parts.push(notes.map((n) => `*Note:* ${n}`).join("\n"));
-    parts.push("Kindly indicate your availability for any of the sessions here or via direct message. Kindly communicate if you would like to be rescheduled.\nThank you");
-    blocks.push(parts.join("\n\n"));
+    const block = weekendBlock(location, sessions, blocks.length === 0);
+    if (block) blocks.push(block);
   }
   return blocks.join("\n\n");
+}
+
+/**
+ * One location's part of the weekend message, or null when it has no
+ * sessions that weekend. `first` chooses "Please find" over "Also, find" —
+ * a location sent as its own message is always first.
+ */
+export function weekendBlock(location: MessageLocation, sessions: MessageSession[], first = true): string | null {
+  const mine = sessions.filter((s) => s.locationId === location.id).sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime));
+  const live = mine.filter((s) => !s.isCancelled);
+  if (live.length === 0) return null;
+
+  const intro = `${first ? "Please find" : "Also, find"} below the public witnessing schedule from *Friday to Sunday* at the location near the *${location.messageName}*.`;
+  const days: string[] = [];
+  for (const date of [...new Set(live.map((s) => s.date))]) {
+    const lines = live
+      .filter((s) => s.date === date)
+      .map((s) => `*Time:* ${formatTimeRange(s.startTime, s.endTime)}\n*Partners:* ${partnersOf(s)}`);
+    days.push(`*${WEEKDAY_NAMES[weekdayOf(date)]}*\n${lines.join("\n\n")}`);
+  }
+  const notes = [...new Set(mine.filter((s) => s.messageNote && (s.isCancelled || s.specialDayName)).map((s) => s.messageNote!))];
+  const parts = [intro, days.join("\n\n")];
+  if (notes.length) parts.push(notes.map((n) => `*Note:* ${n}`).join("\n"));
+  parts.push("Kindly indicate your availability for any of the sessions here or via direct message. Kindly communicate if you would like to be rescheduled.\nThank you");
+  return parts.join("\n\n");
 }
 
 const shortDay = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });

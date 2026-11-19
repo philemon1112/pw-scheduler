@@ -30,7 +30,7 @@ const norm = (text: string) => text.replace(/\s+/g, " ").trim();
 export function namesIn(text: string): string[] {
   if (/no session/i.test(text)) return [];
   return text
-    .split(/\r?\n|\s*\/\s*/)
+    .split(/\r?\n|\s*\/\s*|[ \u00a0]{2,}/)
     .map((line) => line.trim())
     .filter((line) => line && !line.startsWith("*"))
     // "Bro & Sis Agbanawo" is a couple's label: kept whole, matched to both of them.

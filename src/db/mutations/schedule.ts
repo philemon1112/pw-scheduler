@@ -224,6 +224,21 @@ export async function dismissSwapRequest(tx: AnyDb, userId: string, requestId: s
   await audit(tx, { userId, action: "swap_rejected", entity: "swap_request", entityId: requestId });
 }
 
+/**
+ * "Use this month in the app" (D32): an imported month that hasn't ended yet
+ * becomes the live, published schedule — people can be swapped by hand, the
+ * messages and members' pages use it, and it stays pair history. Past
+ * imported months stay as they were served.
+ */
+export async function adoptImportedMonth(tx: AnyDb, userId: string, month: string, currentMonth: string) {
+  const [schedule] = await tx.select().from(schedules).where(eq(schedules.month, month)).limit(1);
+  if (!schedule) throw new ScheduleError("There's no schedule for that month yet.");
+  if (schedule.status !== "archived") throw new ScheduleError("That month is already in use in the app.");
+  if (month < currentMonth) throw new ScheduleError("That month is over; it stays as it was served.");
+  await tx.update(schedules).set({ status: "published", publishedAt: sql`now()`, updatedAt: sql`now()` }).where(eq(schedules.id, schedule.id));
+  await audit(tx, { userId, action: "publish", entity: "schedule", entityId: schedule.id, diff: { month, adopted: true } });
+}
+
 /** Publish, or move back to draft. Published months count as history for the no-repeat rule. */
 export async function setScheduleStatus(tx: AnyDb, userId: string, month: string, status: "draft" | "published") {
   const [schedule] = await tx.select().from(schedules).where(eq(schedules.month, month)).limit(1);

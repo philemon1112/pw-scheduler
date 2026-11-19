@@ -61,7 +61,7 @@ test("sign in → generate → lock → publish → print → copy the weekend m
   const first = new Date(`${month}-01T00:00:00Z`);
   const friday = new Date(first.getTime() + ((5 - first.getUTCDay() + 7) % 7) * 86_400_000).toISOString().slice(0, 10);
   await page.goto(`/messages?tab=weekend&friday=${friday}`);
-  await page.getByRole("button", { name: "Copy", exact: true }).click();
+  await page.getByRole("button", { name: /^Copy the .+ message$/ }).first().click();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   expect(copied).toMatch(/^Good (Morning|Afternoon|Evening) @all\nPlease find below the public witnessing schedule from \*Friday to Sunday\*/);
   expect(copied).toContain("*Partners:*");
