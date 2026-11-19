@@ -1,6 +1,6 @@
 # PW Scheduler — plan
 
-Status: **approved 18 Nov 2026.** Milestone 1 is built; answers to the questions are in DECISIONS D14. The build prompt is saved next to this file as `BUILD-PROMPT.md`, and the seed is in `seed/pw-history-2026.json`.
+Status: **approved 18 Nov 2026.** Milestones 1–4 are built; answers to the questions are in DECISIONS D14. The build prompt is saved next to this file as `BUILD-PROMPT.md`, and the seed is in `seed/pw-history-2026.json`.
 
 Section numbers like "§7" refer to `BUILD-PROMPT.md`.
 

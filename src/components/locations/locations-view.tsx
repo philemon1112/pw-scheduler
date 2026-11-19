@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CalendarOff, LoaderCircle, MapPin, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { LoaderCircle, MapPin, Plus, RotateCcw, Trash2 } from "lucide-react";
 
 import { saveLocationAction } from "@/app/(app)/locations/actions";
 import { EmptyState } from "@/components/empty-state";
@@ -28,7 +28,7 @@ type LocationForm = LocationInput & { key: string | null };
  * lands. The time label for the sheet is filled in from the times unless it
  * has been typed, because a mistyped "pm" is how the old sheets went wrong.
  */
-export function LocationsView({ locations, canEdit }: { locations: LocationForm[]; canEdit: boolean }) {
+export function LocationsView({ locations, canEdit, children }: { locations: LocationForm[]; canEdit: boolean; children?: React.ReactNode }) {
   const [adding, setAdding] = React.useState(false);
 
   return (
@@ -64,17 +64,7 @@ export function LocationsView({ locations, canEdit }: { locations: LocationForm[
           />
         ) : null}
 
-        <div className="rise flex items-start gap-3 rounded-2xl border border-dashed border-border bg-card/60 p-4 [animation-delay:120ms]">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-            <CalendarOff className="size-4" />
-          </span>
-          <div>
-            <p className="text-[0.875rem] font-medium">Special days</p>
-            <p className="mt-0.5 text-[0.8125rem] text-muted-foreground">
-              National Sanitation Day and one-off days like an assembly weekend arrive in the next milestone, with a live preview of what they do to each slot.
-            </p>
-          </div>
-        </div>
+        {children}
       </div>
     </>
   );

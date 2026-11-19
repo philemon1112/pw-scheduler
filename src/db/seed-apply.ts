@@ -1,5 +1,6 @@
 import { and, eq, ne, sql } from "drizzle-orm";
 
+import { NATIONAL_SANITATION_DAY } from "@/lib/dates/special-days";
 import type { SeedPlan } from "@/lib/import/seed-plan";
 import { nameKey } from "@/lib/import/names";
 
@@ -13,10 +14,12 @@ import {
   sessions,
   settings,
   slots,
+  specialDayRules,
 } from "./schema";
 import type { AnyDb } from "./types";
 
 export interface SeedReport {
+  specialDaysAdded: number;
   locations: number;
   slots: number;
   membersAdded: number;
@@ -40,6 +43,15 @@ export interface SeedReport {
 export async function applySeed(database: AnyDb, plan: SeedPlan, raw: unknown): Promise<SeedReport> {
   return database.transaction(async (tx) => {
     await tx.insert(settings).values({ id: 1, congregationName: plan.congregation }).onConflictDoNothing();
+
+    // National Sanitation Day (§7), on by default — added once, and left
+    // alone after that so edits in the app stick.
+    const [sanitation] = await tx.select({ id: specialDayRules.id }).from(specialDayRules).where(eq(specialDayRules.name, NATIONAL_SANITATION_DAY.name));
+    let specialDaysAdded = 0;
+    if (!sanitation) {
+      await tx.insert(specialDayRules).values(NATIONAL_SANITATION_DAY);
+      specialDaysAdded = 1;
+    }
 
     // Locations and slots, by key.
     const locationIds = new Map<string, string>();
@@ -178,6 +190,7 @@ export async function applySeed(database: AnyDb, plan: SeedPlan, raw: unknown): 
 
 
     return {
+      specialDaysAdded,
       locations: plan.locations.length,
       slots: slotCount,
       membersAdded: added.length,

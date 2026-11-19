@@ -30,6 +30,7 @@ async function main() {
     console.log(`Locations: ${report.locations}, slots: ${report.slots}`);
     console.log(`Members added: ${report.membersAdded} (existing ones were left as they are)`);
     console.log(`Couples added: ${report.couplesAdded}`);
+    if (report.specialDaysAdded) console.log("Added National Sanitation Day (first Saturday, ends 10:00).");
     for (const month of report.months) {
       console.log(`  ${month.month}: ${month.action}${month.reason ? ` — ${month.reason}` : `, ${month.sessions} sessions`}`);
     }
