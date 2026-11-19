@@ -66,3 +66,24 @@ Re-pairing someone deletes the old couple row, but first clears the couple link 
 ## D19 — Local Postgres without Docker
 `pnpm db:local` (PGlite over the Postgres protocol) gives a database for trying the app before Neon is set up and for offline work. The DB client uses node-postgres for `localhost` URLs and Neon's drivers otherwise. Tests use PGlite in memory with every migration applied, so constraints, the pair-history view and transactions are tested for real.
 
+## D20 — How special days combine (milestone 3)
+- **Order:** recurring rules apply first, then one-off days, so a one-off day placed on top of Sanitation Day has the last word.
+- **Cancel is final.** Once a session is cancelled, no later rule moves it again.
+- **The three recurring actions:** *off before cutoff* turns off slots that end by the cutoff and moves slots running past it to start at the cutoff, keeping their end time. *Shift all* moves every slot starting before the cutoff to start at it. *Cancel matching* cancels slots starting before the cutoff, or the whole day when no cutoff is set.
+- **Overlaps are shown, not prevented.** When a rule makes two sessions at one place overlap, the preview warns about it. Prevention would make some legitimate setups impossible to enter.
+- **One resolver everywhere.** The rule editor's preview, the schedule month view and (from milestone 4) the generator all call `resolveMonthSessions`, so they can't disagree.
+
+## D21 — The schedule shows a month before it is built
+`/schedule` opens the current Accra month. A month with no schedule shows its sessions resolved from today's slots and special days, marked "Not built". A month with a schedule shows what is stored. For an imported month, that is what was actually served, even where slots have changed since. In the week label, "3 – 8 Nov" comes from the dates that have sessions, matching the old sheets; Settings shows the full Mon–Sun range ("2 – 8 Nov") because it is explaining the rule.
+
+## D22 — Scheduler choices (milestone 4)
+- **Weights** (lower total is better, all editable through `settings.scoring_weights`): unfilled session 1000, a broken hard rule 500, repeat from 1 / 2 / 3 months ago 100 / 60 / 30, older but inside the window 15, same pair twice in a month 150, fairness 120 × the squared spread of sessions÷limit within each privilege, twice in one week 40, consecutive weeks 15, same slot again 5, preferred location −5, "prefer" pair −20.
+- **Leaving a session empty beats breaking a limit.** With the placeholder limits (everyone a publisher at 2), 41 people give 82 places and December needs 92, so 5 sessions stay empty. The builder says so in a banner before anyone generates. The engine never places one person alone in an empty session.
+- **Always-together couples** (`couples.always_together`, true for all six) only serve with each other. Turning it off lets a spouse also serve in a same-gender pair.
+- **"Last month" for repeats** is the most recent earlier month in the history, which for November is September (there is no October), matching "34 of 43". The penalties use the calendar age, so September costs 60 when building November.
+- **Hand edits can break rules.** The picker allows anyone, and the evaluation marks what it breaks (badges, the Clashes card, the warnings). Suggestions never break a hard rule.
+- **Published months can still be edited by hand.** Only Regenerate needs "Back to draft", so last-minute swaps don't mean unpublishing. Published and imported months count as pair history; drafts don't.
+- **Drag and drop swaps whole cells.** "Allow mixed pair" stays with the session, not the people. Locked cells can't be dragged or dropped on.
+- **Sessions follow the slots and special days on every Generate.** New ones are added, changed times updated, and removed ones deleted with their pairs. A cancelled session loses its pair.
+- **Speed:** 300 seeded greedy passes plus local search. A December built from the seed takes about 150–250 ms, and a random 50 × 50 month about 250 ms.
+
